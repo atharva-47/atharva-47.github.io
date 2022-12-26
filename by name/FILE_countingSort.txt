@@ -1,0 +1,153 @@
+//Program for sorting a file containing employee names and age, based on their age and copying it to new file.
+
+//First find key(max)
+//Then declare array count
+//Initialize array count to zero
+//Initialize array count as per the emp[].age(main array)
+//Sum the elements of count and store final result in last position of count array
+//Then according to the main array, decrement the count array[main array] and store value of the 'i'th position age in it, and name in it.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX 20
+
+struct employees
+{
+	char name[MAX];
+	int age;
+}emp[MAX];
+
+
+void countArr(int key,int num_of_emp)
+{
+	FILE *fp;
+	
+	struct employees temp[MAX];
+	
+	int count[key+1];	//Creating count array
+	
+	for(int i=0;i<key+1;count[i++]=0);	//Initializing count array elements to zero.
+	
+	for(int i=0;i<num_of_emp;i++)		//Incrementing position of count at emp[i].age position.
+	{
+		count[emp[i].age]++;
+	}
+	printf("\n");
+	
+	
+	//printf("Count array : \n");
+	//for(int i=0;i<key+1;i++)
+	//{
+	//	printf("%d\n",count[i]);
+	//}
+	//printf("\n");
+	
+	//Counting sort
+	for(int i=1;i<=key;i++)		//Summing one by one each place of count array and storing final result in the last position of count array.
+	{
+		count[i]=count[i]+count[i-1];
+	}
+	
+	for(int i=num_of_emp-1;i>=0;i--)	//Starting from last position of emp[] array.
+	{
+		temp[--count[emp[i].age]].age=emp[i].age;
+		//printf("%d\t",emp[i].age);
+		
+		//printf("[--count[emp[i].age] = %d\n",(--count[emp[i].age]));
+		
+		
+		for(int j=0;j<strlen(emp[i].name);j++)
+		{
+			temp[count[emp[i].age]].name[j]=emp[i].name[j];
+		}
+		//printf("\n");
+	}
+	
+	for(int i=0;i<num_of_emp;i++)
+	{
+		printf("%s\t%d\n",temp[i].name,temp[i].age);
+	}
+	
+	fp=fopen("employee_SortedAge.txt","w");
+	
+	for(int i=0;i<num_of_emp;i++)
+	{	
+		fprintf(fp,"%s\t%d\n",temp[i].name,temp[i].age);
+	}	
+}	
+
+int main()
+{
+	int num_of_emp=0,maximum,key;
+	
+	FILE *fp;
+	
+	fp=fopen("employee.txt","r");
+	if(fp==NULL)
+	{
+		printf("The file does not exist.\n");
+		exit(0);
+	}
+	
+	while(!feof(fp))
+	{
+		fscanf(fp,"%s\t%d",emp[num_of_emp].name,&emp[num_of_emp].age);
+		if(!feof(fp))
+		{
+			num_of_emp++;
+		}
+	}
+	
+	if(num_of_emp==0)
+	{
+		printf("File is empty!\n");
+		exit(0);
+	}else if(num_of_emp==1)
+		{
+			printf("File contains only one record...\n");
+			exit(0);
+		}else
+			{
+				printf("Total number of employees in the file : %d\n",num_of_emp);
+				maximum=emp[0].age;
+				
+				for(int i=1;i<num_of_emp;i++)
+				{
+					if(maximum < emp[i].age)
+					{
+						maximum=emp[i].age;
+					}
+				}
+				
+				key=maximum;
+				//printf("Max : %d\n",key);
+				
+				countArr(key,num_of_emp);
+			}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

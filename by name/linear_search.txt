@@ -1,0 +1,56 @@
+//Program for linear search of an element 'x' entered by the user.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int search(int arr[],int n,int searchEle);
+
+int main()
+{
+	int n,ele,searchEle,pos;
+	
+	printf("How many integers do you want to enter : ");
+	scanf("%d",&n);
+	
+	printf("\n");
+	
+	int arr[n];
+	
+	for(int i=0;i<n;i++)
+	{
+		printf("Enter element %d : ",i+1);
+		scanf("%d",&ele);
+		
+		arr[i]=ele;
+	}
+	
+	printf("\nEnter an element you want to search for, in the array : ");
+	scanf("%d",&searchEle);
+	
+	pos=search(arr,n,searchEle);
+	
+	if(pos==-1)
+	{
+		printf("\n%d is not present in the array.\n",searchEle);
+		return 0;
+	}
+	
+	printf("\n%d is present at position %d\n",searchEle,pos);
+	
+	return 0;
+}
+
+int search(int arr[],int n,int searchEle)
+{
+	int pos=1;
+	
+	for(int i=0;i<n;i++,pos++)
+	{
+		if(arr[i]==searchEle)
+		{
+			return pos;
+		}
+	}
+	
+	return -1;
+}

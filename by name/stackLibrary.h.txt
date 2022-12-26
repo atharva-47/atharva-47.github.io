@@ -1,0 +1,120 @@
+//Header file for operations on stack
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node 
+{
+	int data;
+	struct node *next;
+};
+
+struct node *push(struct node *top,int info)
+{
+	struct node *tmp;
+	tmp=(struct node *)malloc(sizeof(struct node));
+	tmp->data=info;
+	
+	//Adding an element will only take place at the BEGINNING of the stack.
+	tmp->next=top;
+	top=tmp;
+		
+	return top;
+}
+
+struct node *pop(struct node *top)
+{
+	struct node *tmp;
+	
+	if(top==NULL)
+	{
+		printf("\nStack underflow...\n");
+		return top;
+	}
+	
+	//Only the first element of the stack will be popped out as Stack works on LIFO principle.
+	tmp=top;
+	top=top->next;
+	
+	printf("\nPopping %d out of the stack...\n",tmp->data);
+	
+	free(tmp);
+	return top;
+}
+
+void display(struct node *top)
+{
+	struct node *ptr;
+	
+	ptr=top;
+	
+	if(top==NULL)
+	{
+		printf("\nStack is empty...\n");
+		goto HERE;
+	}
+	
+	printf("\n-----------\n");
+	while(ptr!=NULL)
+	{
+		printf("     %d\n",ptr->data);
+		printf("-----------\n");
+		ptr=ptr->next;
+	}
+	
+	HERE:
+	printf("\n");
+}
+
+
+struct node *createStack(struct node *top)	//Function to create new Stack using linked list.
+{
+	int info;
+	struct node *ptr,*new_top=NULL;		//new_top holds the address of first node of newly created Stack.
+	
+	ptr=top;
+	
+	while(ptr!=NULL)
+	{
+		new_top=push(new_top,ptr->data);	//Starting to add nodes to the second stack starting from top2 which in this case acts as 'start'.
+		ptr=ptr->next;
+	}	
+	
+	return new_top;
+}
+
+struct node *copy_contents(struct node *top)		//Top is the 'start' of the Stack whose contents are to be copied onto a new stack.
+{
+	struct node *new_top=NULL;
+	
+	new_top=createStack(top);		//Stack2 acts as 'start' for the newly created Stack.
+	
+	return new_top;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

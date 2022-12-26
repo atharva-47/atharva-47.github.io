@@ -1,0 +1,126 @@
+//Header file for functions of static stack.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX 20
+
+int top=-1;
+
+int isFull()
+{
+	if(top>=MAX-1)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+void push(int arr[],int data)
+{
+	if(isFull())
+	{
+		printf("\nstack full..\n");
+		goto BREAK;
+	}
+	
+	if(top==-1)
+	{
+		top=0;
+		arr[top]=data;
+	}else
+		{
+			top++;
+			arr[top]=data;
+		}
+		
+	BREAK:	
+}
+
+void pop(int arr[])
+{
+	if(top==-1)
+	{
+		printf("\nstack underflow...\n");
+		goto BREAK;
+	}else
+		{
+			printf("\nPopping %d out...\n",arr[top]);
+			top--;
+		}
+	
+	BREAK:
+}
+
+void createStack(int arr[])
+{
+	top=-1;		//Top should be initialised back to -1 as we have to create a new stack.
+	int data;
+	
+	printf("Data element to be entered into the stack : ");
+	scanf("%d",&data);
+	
+	push(arr,data);
+}
+
+void display(int arr[])
+{
+	if(top==-1)
+	{
+		printf("\nstack underflow...\n");
+		goto BREAK;
+	}else
+		{
+			printf("Stack : \n");
+			for(int i=top;i>=0;i--)
+			{
+				printf("%d\n",arr[i]);
+			}
+		}
+	
+	BREAK:
+}
+
+int compare(int arr1[],int arr2[])
+{
+	int flag=0;
+	
+	for(int i=top;i>=0;i--)
+	{
+		if(arr1[i]==arr2[i])
+		{
+			flag=0;
+		}else
+			{
+				flag=1;
+				break;
+			}
+	}
+	
+	if(flag==0)
+	{
+		return 1;
+	}else
+		{
+			return -1;
+		}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

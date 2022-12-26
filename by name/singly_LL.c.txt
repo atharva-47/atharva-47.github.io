@@ -1,0 +1,48 @@
+//Program to call functions of singly LL header file
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "singly_LL_library.h"
+
+int main()
+{
+	struct node *start=NULL;
+	int choice,ele;
+	
+	printf("\n1) Create a singly LL\n");
+	printf("2) Display the LL\n");
+	printf("3) Delete an element\n");
+	printf("4) Exit\n\n");
+	
+	do
+	{
+		printf("Enter your choice : ");
+		scanf("%d",&choice);
+		
+		switch(choice)
+		{
+			case 1:
+				start=createList(start);
+				break;
+				
+			case 2:
+				traverse(start);	
+				break;
+				
+			case 3:
+				printf("Enter the element to be deleted : ");
+				scanf("%d",&ele);
+				start=deleteEle(start,ele);
+				break;
+				
+			case 4:
+				exit(0);
+				break;		
+			
+			default:
+				printf("Invalid option!\n");
+				break;		
+		}
+		
+	}while(choice!=4);
+}

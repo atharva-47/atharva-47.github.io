@@ -1,0 +1,31 @@
+//Program to check whether 2 stacks are identical or not.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "staticStackLib.h"
+
+int main()
+{
+	int arr1[MAX];
+	int arr2[MAX];
+	int var;
+	
+	createStack(arr1);
+	push(arr1,4);
+	push(arr1,5);
+	display(arr1);
+	
+	createStack(arr2);
+	push(arr2,4);
+	push(arr2,5);
+	display(arr2);
+	
+	var=compare(arr1,arr2);
+	if(var==1)
+	{
+		printf("Stacks are identical.\n");
+	}else
+		{
+			printf("Stacks are not identical.\n");
+		}
+}

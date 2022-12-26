@@ -1,0 +1,109 @@
+//Program for sorting the numbers of an array using quick sort method.
+
+//In quick sort, you first decide what the pivot element is going to be, and then pass lower and upper bounds of the array to quick sort function which in turn will call the partition function that will part the array in two halves, left half containing elements smaller than pivot, and right half containing elements greater than pivot, then these partitioned arrays will be sorted by a recursive call that the function quick sort makes.
+//Time complexity : Worst case - O(n^2)
+//		    Average case - O(nlogn)	
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void swap(int arr[],int start,int end)
+{
+	int temp=arr[start];
+	arr[start]=arr[end];
+	arr[end]=temp;
+}
+
+int partition(int arr[],int lb,int ub)
+{
+	int pivot=arr[lb];
+	
+	int start=lb+1;
+	int end=ub;
+	
+	int temp;
+	
+	while(start<end)
+	{
+		while(arr[start] <= pivot)	//Stop once a greater element than pivot is found
+		{
+			start++;
+		}
+		
+		while(arr[end] > pivot)		//Stop once a smaller element than pivot is found
+		{
+			end--;
+		}
+		
+		if(start<end)			//Swap the greater and smaller elements for putting it in the correct partition.  
+		{
+			swap(arr,start,end);
+		}
+	}
+	
+	swap(arr,lb,end);			//Swap the pivot and end element, so now our end position contains 'pivot' element, and to right of pivot->greater elements & left->smaller elements.
+	return end;		//i.e. the pivot position.
+}
+
+void quicksort(int arr[],int lb,int ub,int n)
+{
+	int end_pos;
+	
+	if(lb<ub)
+	{
+		end_pos=partition(arr,lb,ub);
+		quicksort(arr,lb,end_pos-1,n);
+		quicksort(arr,end_pos+1,ub,n);
+	}
+}
+
+int main()
+{
+	int n;
+	
+	printf("\nHow many numbers do you want to enter in the array : ");
+	scanf("%d",&n);
+	
+	int arr[n];
+	
+	for(int i=0;i<n;i++)
+	{
+		printf("Enter integer %d : ",i+1);
+		scanf("%d",&arr[i]);
+	}
+	
+	printf("Array elements you entered : \n");
+	for(int i=0;i<n;i++)
+	{
+		printf("%d\n",arr[i]);
+	}
+	printf("\n");
+	
+	int lb=0;
+	int ub=n-1;
+	
+	quicksort(arr,lb,ub,n);
+	printf("Sorted array : \n");
+	for(int i=0;i<n;i++)
+	{
+		printf("%d\n",arr[i]);
+	}
+	printf("\n");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

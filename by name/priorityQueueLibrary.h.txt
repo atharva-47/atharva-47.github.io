@@ -1,0 +1,164 @@
+//Header file for functions performing operations on priority queue.
+
+#include <stdio.h>
+#include <stdlib.h>
+#define MAX 10
+
+int front=-1;
+int rear=-1;
+
+struct priorityQueue
+{
+	int priority;
+	int data;
+}PQ[MAX];
+
+int isEmpty()
+{
+	if((front==-1) && (rear==-1))
+	{
+		return 1;
+	}else
+		{
+			return 0;
+		}
+}
+
+
+int isFull()
+{
+	if(rear>=MAX-1)
+	{
+		return 1;
+	}else
+		{
+			return 0;
+		}
+}
+
+
+void insertByPriority()
+{
+	if(isFull())
+	{
+		printf("\nQueue is full.\n");
+		//goto BREAK;
+	}else{
+	
+	int priority,data;
+	int temp1,temp2;
+	int i=front;
+	
+	printf("\nEnter the priority of the element : ");
+	scanf("%d",&priority);
+	
+	printf("\nEnter element to be inserted : ");
+	scanf("%d",&data);
+	
+	if((front==-1) && (rear==-1))		//Check if queue is empty.
+	{
+		front=0;
+		rear=0;
+		PQ[rear].priority=priority;
+		PQ[rear].data=data;
+	}else
+		{
+			rear++;
+			
+			PQ[rear].priority=priority;	//adding the priority to the last position and then checking and comparing it with rest priorities of the queue and swapping accordingly.
+			PQ[rear].data=data;
+					
+			while(i!=rear) 
+			{
+				if(PQ[i].priority > priority)	//Checking from the first node and if the priority 'p' of the node entered by user is greater, then adding it before the priority that
+								// is greater than 'p', or if no such priority exists, node is added at rear i.e. end.
+				{
+					temp1=PQ[rear].priority;
+					PQ[rear].priority=PQ[i].priority;
+					PQ[i].priority=temp1;
+							
+					temp2=PQ[rear].data;
+					PQ[rear].data=PQ[i].data;
+					PQ[i].data=temp2;
+				}
+					
+				i++;
+			}
+		}
+	}
+	//BREAK:
+}
+
+
+void deleteByPriority()
+{
+	if(isEmpty())
+	{
+		printf("Queue underflow...\n");
+		goto HERE;
+	}else
+		{
+			if(front==rear)
+			{
+				printf("Deleting %d with priority %d...\n",PQ[front].data,PQ[front].priority);
+				front=-1;
+				rear=-1;
+				goto HERE;
+			}
+			
+			printf("Deleting %d with priority %d...\n",PQ[front].data,PQ[front].priority);
+			front++;
+		}
+	
+	HERE:
+}
+
+
+void peek()
+{
+	printf("Element at the beginning of the queue is %d with priority %d\n",PQ[front].data,PQ[front].priority);
+}
+
+
+void display()
+{
+	int i=front;
+	
+	if(isEmpty())
+	{
+		printf("\nPriority queue is empty...\n");
+	}else
+		{
+			printf("\nElement\tPriority\n");
+			while(i<=rear)
+			{
+				printf("   %d\t   %d\n",PQ[i].data,PQ[i].priority);
+				i++;
+			}
+			printf("\n");
+		}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

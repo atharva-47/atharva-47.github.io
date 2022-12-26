@@ -1,0 +1,100 @@
+//Program for implementing sentinel search.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int var=1;
+
+int sentinelSearch(int arr[],int n,int searchEle)
+{
+	int last=arr[n-1];
+	int i,flag=0;
+	
+	arr[n-1]=searchEle;
+	
+	while(i!=(n-1))
+	{
+		if(arr[i]==searchEle)
+		{
+			flag=0;
+			return var;
+		}else
+			{
+				flag=1;
+			}
+		
+		var++;
+		i++;
+	}
+	
+	if(flag==1)
+	{
+		arr[i]=last;
+		
+		if(arr[i]==searchEle)
+		{
+			return var;
+		}
+	}
+	
+	return -1;
+}
+
+int main()
+{
+	int n,search,element;
+	
+	printf("How many integers do you want in the array : ");
+	scanf("%d",&n);
+	
+	int arr[n];
+	
+	for(int i=0;i<n;i++)
+	{
+		printf("Enter element %d : ",i+1);
+		scanf("%d",&arr[i]);
+	}
+	
+	printf("Enter the element you want ot search for : ");
+	scanf("%d",&element);
+	
+	search=sentinelSearch(arr,n,element);
+	
+	if(search!=-1)
+	{
+		printf("%d is found at position %d\n",element,search);
+	}else
+		{
+			printf("%d is not present in the array\n",element);
+		}	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
