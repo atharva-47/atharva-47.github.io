@@ -1,0 +1,234 @@
+Q1. Sort a random array of n integers (accept the value of n from user) in 
+ ascending order by using quick sort algorithm.
+
+#include<stdio.h>
+void display(int num[10],int n);
+void generate(int num[10],int n);
+void qsort(int arr[10],int low,int high);
+int main()
+{
+    int num[10],n;
+    printf("Enter how many numbers: ");
+    scanf("%d",&n);
+    generate(num,n);
+    printf("\nThese are random numbers generated: ");
+    display(num,n);
+    printf("\n");
+    qsort(num,0,n-1);
+    printf("After sorting: ");
+    display(num,n);
+    return 0;
+}
+void generate(int num[10],int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+        num[i]=rand()%100;
+}
+void display(int num[10],int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+        printf("%d ",num[i]);
+}
+void qsort(int arr[10],int low,int high)
+{
+    int pivot,i,j,temp;
+    if(low<high)
+    {
+       pivot=low;
+ 
+       i=low+1;
+       j=high;
+       while(i<=j)
+           {
+           while(arr[i]<=arr[pivot] && i<=high)
+              i++;
+           while(arr[j]>arr[pivot] && j>=low)
+                  j--;
+           if(i<j)
+           {
+           temp=arr[i];
+           arr[i]=arr[j];
+           arr[j]=temp;
+           }
+           }
+       temp=arr[j];
+           arr[j]=arr[pivot];
+       arr[pivot]=temp;
+            
+       qsort(arr,low,j-1);
+       qsort(arr,j+1,high);
+       }
+}
+
+
+Output:
+Enter how many numbers: 7
+These are random numbers generated: 83 86 77 15 93 35 86 
+After sorting: 15 35 77 83 86 86 93 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Write a program that checks whether a string of characters is palindrome 
+ or not. The function should use a stack library (cststack.h) of stack of 
+ characters using a static implementation of the stack.
+
+
+#include<stdio.h>
+#include<string.h>
+#define MAX 15
+ 
+char name[MAX],top;
+ 
+void init()
+{
+    top=-1;
+    printf("\nStatic Stack Initiaized\n");
+}
+ 
+void push(char c)
+{
+        top++;
+        name[top]=c;
+}
+ 
+char pop()
+{
+    return name[top--];
+}
+ 
+isempty()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not empty\n");
+    }
+}
+
+Save this above code in the stack library file as cststack.h
+
+
+void palindrome();
+#include<stdio.h>
+#include<stdlib.h>
+#include "cstack.h"
+int main()
+{
+    int ch,i;
+    char string[15];
+    while(1)
+    {
+        printf("\n-----Static Stack to check palindrome string-----\n");
+        printf("\n1.Init\n");
+        printf("2.Check Palindrome String\n");
+        printf("3.IsEmpty\n");
+        printf("4.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:init();  break;
+            case 2: palindrome(); break;
+            case 3:isempty(); break;
+            case 4:exit(0);
+        }
+    }
+}
+ 
+void palindrome()
+{
+        char string[15];
+        int i,count=0,len;
+        printf("\nEnter a string:");
+        scanf("%s",string);
+        len=strlen(string);
+        for(i=0;i<len;i++)
+        {
+            push(string[i]); 
+        }   
+        for (i = 0; i <len; i++)
+            {
+            if (string[i] == pop())
+                    count++;
+            }
+  
+            if (count == len)
+                printf("%s is a Palindrome string\n", string);
+            else
+                printf("%s is not a palindrome string\n", string);
+}
+
+Save this file as stack.c and compile and run the stack.c
+
+Output:
+
+-----Static Stack to check palindrome string-----
+
+1.Init
+2.Check Palindrome String
+3.IsEmpty
+4.Exit
+Enter your choice: 1
+
+Static Stack Initiaized
+
+-----Static Stack to check palindrome string-----
+
+1.Init
+2.Check Palindrome String
+3.IsEmpty
+4.Exit
+Enter your choice: 2
+
+Enter a string:123423
+123423 is not a palindrome string
+
+-----Static Stack to check palindrome string-----
+
+1.Init
+2.Check Palindrome String
+3.IsEmpty
+4.Exit
+Enter your choice: 2
+
+Enter a string:121
+121 is a Palindrome string
+
+-----Static Stack to check palindrome string-----
+
+1.Init
+2.Check Palindrome String
+3.IsEmpty
+4.Exit
+Enter your choice: 2
+
+Enter a string:malayalam
+malayalam is a Palindrome string
+
+-----Static Stack to check palindrome string-----
+
+1.Init
+2.Check Palindrome String
+3.IsEmpty
+4.Exit
+Enter your choice: 3
+
+Static Stack is empty
+
+-----Static Stack to check palindrome string-----
+
+1.Init
+2.Check Palindrome String
+3.IsEmpty
+4.Exit
+Enter your choice: 4
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+

@@ -1,0 +1,180 @@
+Q1. Read the data from the ‘employee.txt’ file and sort on age using Count sort
+and write the sorted data to another file 'sortedemponage.txt'.
+
+
+#include <stdio.h>
+#include <stdlib.h>
+struct employee
+{
+int age;
+};
+int cntRec(char fnm[])
+{
+int n=0,age;
+FILE *fp;
+fp = fopen(fnm,"r");
+while( fscanf(fp,"%d",&age) != EOF )
+n++;
+fclose(fp);
+return n;
+}
+void Quick_Sort(struct employee *emp,int lb,int ub)
+{
+if( lb < ub )
+{
+int p;
+p = Partition(emp, lb, ub);
+Quick_Sort(emp, lb, p-1);
+Quick_Sort(emp, p+1, ub);
+}
+}
+void sort(struct employee *emp, int n)
+{
+Quick_Sort(emp,0,n-1);
+}
+ 
+int Partition(struct employee *emp, int lb, int ub)
+{
+struct employee temp = emp[lb];
+int down, up;
+down = lb;
+up = ub;
+while( down < up )
+{
+while( down <= ub && emp[down].age <= temp.age ) down++;
+while( emp[up].age > temp.age ) up--;
+if( down < up )
+{
+struct employee t = emp[down];
+emp[down] = emp[up];
+emp[up] = t;
+}
+}
+emp[lb] = emp[up];
+emp[up] = temp;
+return up;
+}
+void fetchRec(struct employee *emp, char fnm[])
+{
+FILE *fp;
+int i=0;
+fp = fopen(fnm,"r");
+while( fscanf(fp,"%d",&emp[i].age) != EOF )
+i++;
+fclose(fp);
+}
+updateFile(struct employee *emp, int n, char fnm[])
+{
+int i;
+FILE *fp;
+fp = fopen(fnm,"w");
+for(i=0; i<n; i++)
+fprintf(fp,"%d\n",emp[i].age);
+fclose(fp);
+}
+main()
+{
+int n=0;
+struct employee *emp;
+n = cntRec("employee.txt");
+emp = malloc(sizeof(struct employee) * n );
+fetchRec(emp,"employee.txt");
+sort(emp,n);
+updateFile(emp,n,"sortedemponage.txt");
+}
+
+save this code as quick.c
+
+Before running this code create an employee.txt file and write ages in that file.
+employee.txt file is required in this program.
+// Open employee.txt file and write ages:
+20
+10
+30
+50
+40 
+// Close the employee.txt file
+Now, Build and Run the code then sortedemponage.txt is generated as output file in the same directory of quick.c file   
+Output: 
+// See the output in sortedemponage.txt
+10
+20
+30
+40
+50
+ 
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Write a program to convert an infix expressionof the form (a*(b+c)*((da)/b)) into its equivalent postfix notation. Consider usual precedence’s 
+of operators. Use stack library of stack of characters using static implementation
+ 
+#include<stdio.h>
+#include<ctype.h>
+
+char stack[100];
+int top = -1;
+
+void push(char x)
+{
+    stack[++top] = x;
+}
+
+char pop()
+{
+    if(top == -1)
+        return -1;
+    else
+        return stack[top--];
+}
+
+int priority(char x)
+{
+    if(x == '(')
+        return 0;
+    if(x == '+' || x == '-')
+        return 1;
+    if(x == '*' || x == '/')
+        return 2;
+    return 0;
+}
+
+int main()
+{
+    char exp[100];
+    char *e, x;
+    printf("Enter the expression : ");
+    scanf("%s",exp);
+    printf("\n");
+    e = exp;
+    
+    while(*e != '\0')
+    {
+        if(isalnum(*e))
+            printf("%c ",*e);
+        else if(*e == '(')
+            push(*e);
+        else if(*e == ')')
+        {
+            while((x = pop()) != '(')
+                printf("%c ", x);
+        }
+        else
+        {
+            while(priority(stack[top]) >= priority(*e))
+                printf("%c ",pop());
+            push(*e);
+        }
+        e++;
+    }
+    
+    while(top != -1)
+    {
+        printf("%c ",pop());
+    }return 0;
+}
+
+output:-
+
+Enter the expression : a+b*c
+
+a b c * +

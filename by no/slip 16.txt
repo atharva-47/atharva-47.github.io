@@ -1,0 +1,144 @@
+Q1. Sort a random array of n integers (accept the value of n from user) in 
+ascending order by using Counting sort algorithm
+
+
+#include <stdio.h>  
+ 
+
+void counting_sort(int A[], int k, int n)
+{
+    int i, j;
+    int B[15], C[100];
+    for (i = 0; i <= k; i++)
+        C[i] = 0;
+    for (j = 1; j <= n; j++)
+        C[A[j]] = C[A[j]] + 1;
+    for (i = 1; i <= k; i++)
+        C[i] = C[i] + C[i-1];
+    for (j = n; j >= 1; j--)
+    {
+        B[C[A[j]]] = A[j];
+        C[A[j]] = C[A[j]] - 1;
+    }
+    printf("The Sorted array is : ");
+    for (i = 1; i <= n; i++)
+        printf("%d ", B[i]);
+}
+
+ 
+
+int main()
+{
+    int n, k = 0, A[15], i;
+    printf("Enter the number of input : ");
+    scanf("%d", &n);
+    printf("\nEnter the elements to be sorted :\n");
+    for (i = 1; i <= n; i++)
+    {
+        scanf("%d", &A[i]);
+        if (A[i] > k) {
+            k = A[i];
+        }
+    }
+    counting_sort(A, k, n);
+    printf("\n");
+    return 0;
+}
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. A postfix expression of the form ab+cd-*ab/ is to be evaluated after 
+accepting the values of a, b, c and d. The value should be accepted only once 
+and the same value is to be used for repeated occurrence of same symbol in the 
+expression. Formulate the problem and write a C program to solve the problem 
+by using stack
+
+
+
+#include<stdio.h>
+#include<string.h>
+
+char s[20];
+int top;
+
+void init()
+{
+	top=-1;
+}
+
+int isempty()
+{ 
+	if(top==-1)
+	return 1;
+	else return 0;
+}
+
+int isfull()
+{ 
+	if(top==19)
+	return 1;
+	else
+	return 0;
+}
+
+void push(char data)
+{
+	if(isfull()==1)
+	printf("\nStack is full ");
+	else
+	{ 
+		top++;
+		s[top]=data;
+	}
+}
+
+char pop()
+{ 
+	char data;
+	if(isempty()==1)
+	printf("\nStack is empty ");
+	else
+	{ 
+		data=s[top];
+		top--;
+		return data;
+	}
+}
+
+void postfix_eval(char str[20])
+{ 
+	int i,op1,op2,val;
+	for(i=0;str[i]!='\0';i++)
+	{ 
+		switch(str[i])
+		{
+			case '+':	op2=pop();
+						op1=pop();
+						push(op1+op2);
+						break;
+			case '-':	op2=pop();
+						op1=pop();
+						push(op1-op2);
+						break;
+			case '*':	op2=pop();
+						op1=pop();
+						push(op1*op2);
+						break;
+			case '/':	op2=pop();
+						op1=pop();
+						push(op1/op2);
+						break;
+			default:printf("Enter value of %c ",str[i]);
+					scanf("%d",&val);
+					push(val);
+		}
+	}
+	printf("Ans =%d ",pop());
+}
+
+main()
+{ 
+	char str[20];
+	printf("Enter postfix string ");
+	scanf("%s",str);
+	postfix_eval(str);
+}

@@ -1,0 +1,241 @@
+Q1. Implement a linear queue library (st_queue.h) of integers using a static 
+implementation of the queue and implementing the operations like init (Q), 
+AddQueue(Q, x) and X=DeleteQueue(Q). Write a program that includes queue 
+library and calls different queue operations. 
+
+
+#include<stdio.h>
+#define MAX 3
+int a[MAX],front,rear;
+ 
+void init()
+{
+    front=-1;
+    rear=-1;
+    printf("\nStatic Queue is initialized\n");
+}
+ 
+void insert()
+{
+    int number;
+    if(rear==MAX-1)
+        printf("\nQueue is full\n");
+    else
+    {
+        printf("\nEnter the value:");
+        scanf("%d",&number);
+        front=0;
+        rear=rear+1;
+        a[rear]=number; 
+        printf("\nValue Enqueued\n");
+    }
+}
+ 
+void delete1()
+{
+    if(front==-1 || rear==front-1)
+        printf("\nQueue is empty\n");
+    else
+    {
+        printf("\nDeleted value is %d",a[front]);   
+        front=front+1;
+    }
+}
+ 
+void isfull()
+{
+    if(rear==MAX-1)
+        printf("\nQueue is full\n");
+    else
+        printf("\nQueue is not full");  
+}
+ 
+void isempty()
+{
+    if(front==-1 || rear==front-1)
+        printf("\nQueue is empty\n");
+    else
+        printf("\nQueue is not empty"); 
+}
+ 
+void peek()
+{
+    if(front==-1 || rear==front-1)
+        printf("\nQueue is empty\n");
+    else
+        printf("\nValue at front is %d",a[front]);  
+}
+
+Save this above code in the stack library file as stqueue.h
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include "stqueue.h"
+int main()
+{
+    int ch;
+    while(1)
+    {
+        printf("\n----Static Queue----\n");
+        printf("\n1.Init\n");
+        printf("2.Insert\n");
+        printf("3.Delete\n");
+        printf("4.Peek\n");
+        printf("5.IsEmpty\n");
+        printf("6.IsFull\n");
+        printf("7.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:init();  break;
+            case 2:insert(); break;
+            case 3:delete1(); break;
+            case 4:peek(); break;
+            case 5:isempty(); break;
+            case 6:isfull(); break;
+            case 7:exit(0);
+        }
+    }
+}
+Save this file as queue.c and compile and run the queue.c
+
+Output:
+----Static Queue----
+
+1.Init
+2.Insert
+3.Delete
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 1
+
+Static Queue is initialized
+
+----Static Queue----
+
+1.Init
+2.Insert
+3.Delete
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 2
+
+Enter the value:10
+
+Value Enqueued
+
+----Static Queue----
+
+1.Init
+2.Insert
+3.Delete
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 3
+
+Deleted value is 10
+
+----Static Queue----
+
+1.Init
+2.Insert
+3.Delete
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 4
+
+Queue is empty
+
+----Static Queue----
+
+1.Init
+2.Insert
+3.Delete
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 6
+
+Queue is not full
+----Static Queue----
+
+1.Init
+2.Insert
+3.Delete
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 7
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Read the data from file 'cities.txt' containing names of cities and their STD 
+codes. Accept a name of the city from user and use sentinel linear search 
+algorithm to check whether the name is present in the file and output the STD 
+code, otherwise output “city not in the list”.
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct city
+{
+	char name[20];
+	int code;
+}ct[10];
+
+int readFile(struct city a[])
+{
+	int i=0;
+	FILE *fp;
+	if((fp=fopen("city.txt","r"))!=NULL)
+	{
+		while(!feof(fp))
+		{
+			fscanf(fp,"%s%d",&a[i].name,&a[i].code);
+			i++;
+		}
+	}
+	return i-1;
+}
+
+void sentinelsearch(struct city a[10],int n,int sr)
+{ 
+		int i,cnt=0;
+		a[n]=sr;
+		while(strcmp(sr,a[i].name)!=0)
+		{ 
+			i++;
+		}
+		if(i<n)
+			printf("city is found and STD code is %d ",a[i].code);
+		else
+			printf("city is not found ");
+}
+
+main()
+{ 
+	int n;
+	char sr[20];
+	n=readFile(ct);
+	if(n==-1)
+	printf("File not found ");
+	else
+	{
+		printf("Enter city name to search");
+		scanf("%s",sr);
+		SentinelSearch(ct,n,sr);
+	}
+}

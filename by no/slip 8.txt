@@ -1,0 +1,281 @@
+Q1. Implement a list library (singlylist.h) for a singly linked list of integer 
+ With the operations create, delete specific element and display. Write a 
+ menu driven program to call these operations 
+
+#include<stdio.h>
+#include<stdlib.h>
+ 
+struct node
+{
+    char data;
+    struct node *next;
+}*start;
+ 
+void create()
+{
+    struct node *temp,*q;
+    temp=(struct node *)malloc(sizeof(struct node));
+    printf("\nEnter the character:");
+    scanf(" %c",&temp->data);
+    temp->next=NULL;
+ 
+    if(start==NULL)
+    {
+        start=temp;
+    }
+    else
+    {
+        q=start;
+        while(q->next!=NULL)
+        {
+            q=q->next;
+        }
+        q->next=temp;
+    }
+}
+ 
+void delete()
+{
+ 
+    struct node *temp,*p;
+    int pos,t;
+    printf("\nEnter the position:");
+        scanf("%d",&pos);
+    t=1;
+    temp=start;
+ 
+ 
+    if(pos==1)
+    {
+        start=start->next;
+        free(temp);
+        printf("\nNode Deleted Successfully\n");
+        return;
+    }
+ 
+    while(t< pos-1)
+    {
+            temp=temp->next;
+            t++;
+    }
+    p=temp->next;
+    temp->next=p->next;
+    free(p);
+    printf("\nNode Deleted Successfully\n");
+}
+ 
+void display()
+{
+    struct node *temp;
+    printf("The Linked List : \n");
+    temp=start;
+    while(temp!=NULL)
+    {
+        printf("%c->",temp->data);
+        temp=temp->next;
+    }
+    printf("NULL");
+}
+
+Save this above code in the stack library file as singlylist.h
+
+#include<stdio.h>
+#include "sll.h"
+int main()
+{
+    int ch;
+    start=NULL;
+    while(1)
+    {
+        printf("\n1.Create\n");
+        printf("2.Delete\n");
+        printf("3.Display\n");
+        printf("4.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:create();  break;
+            case 2:delete();  break;            
+            case 3:display(); break;
+            case 4:exit(0);
+        }
+    }
+}
+
+Save this file as linkedlist.c and compile and run the linkedlist.c
+
+Output:
+
+1.Create
+2.Delete
+3.Display
+4.Exit
+Enter your choice: 1
+
+Enter the character:a
+
+1.Create
+2.Delete
+3.Display
+4.Exit
+Enter your choice: 3
+The Linked List :
+a->NULL
+1.Create
+2.Delete
+3.Display
+4.Exit
+Enter your choice: 1
+
+Enter the character:b
+
+1.Create
+2.Delete
+3.Display
+4.Exit
+Enter your choice: 3
+The Linked List :
+a->b->NULL
+1.Create
+2.Delete
+3.Display
+4.Exit
+Enter your choice: 2
+
+Enter the position:2
+
+Node Deleted Successfully
+
+1.Create
+2.Delete
+3.Display
+4.Exit
+Enter your choice: 3
+The Linked List :
+a->NULL
+1.Create
+2.Delete
+3.Display
+4.Exit
+Enter your choice: 4
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Write a C program to check whether the contents of two stacks are
+ identical. Use stack library to perform basic stack operations. Neither 
+ stack should be changed
+
+
+#include <stdio.h>
+
+#include "stststack.h"
+
+int main(void)
+
+{
+
+    stack s1,s2;
+
+    init(&s1);
+
+    init(&s2);
+
+    int num,n,i,j,size,number;
+
+     printf("How many elements in stack1: ");
+
+     scanf("%d",&n);
+
+     printf("Enter element to push: ");
+
+     for(i=0;i<n;i++)
+
+     {
+
+         scanf("%d",&num);
+
+         push(&s1,num);
+
+     }
+
+     printf("How many elements in stack2: ");
+
+     scanf("%d",&size);
+
+     printf("Enter elements in push: ");
+
+      for(i=0;i<size;i++)
+
+     {
+
+         scanf("%d",&number);
+
+         push(&s2,number);
+
+     }
+
+     stack t1,t2;
+
+     init(&t1);
+
+     init(&t2);
+
+     while(!isempty(&s1) && !isempty(&s2) && (peek(&s1)==peek(&s2)))
+
+     {
+
+         push(&t1,pop(&s1));
+
+         push(&t2,pop(&s2));
+
+     }
+
+
+
+     if(isempty(&s1) && isempty(&s2))
+
+     {
+
+        printf("\nStacks are identical\n");
+
+     }
+
+     else
+
+     {
+
+         printf("\nNot Equal\n");
+
+     }
+
+
+
+     while(!isempty(&t1))
+
+        push(&s1,pop(&t1));
+
+
+
+     while(!isempty(&t2))
+
+        push(&s2,pop(&t2));
+
+}
+
+
+
+
+Output:
+
+How many elements in stack1:   5
+
+Enter element to push:   12 67 55 22 1
+
+How many elements in stack2:   5
+
+Enter elements in push:   12 67 55 22 1
+
+
+
+Stacks are identical

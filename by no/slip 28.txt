@@ -1,0 +1,236 @@
+Q1. Implement a stack library (ststack.h) of integers using a static 
+implementation of the stack and implementing the above six operations. Write 
+a driver program that includes stack library and calls different stack operations
+
+
+#include<stdio.h>
+#define MAX 15
+ 
+char name[MAX],top;
+ 
+void init()
+{
+    top=-1;
+    printf("\nStatic Stack Initiaized\n");
+}
+ 
+void push()
+{
+    if(top==MAX-1)
+    {
+        printf("\nStatic Stack is full\n");
+    }
+    else
+    {
+        top++;
+        printf("Enter a character to be push:");
+        scanf(" %c",&name[top]);
+    }
+}
+ 
+void pop()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("Poped value is:%c",name[top]);
+        top--;
+    }
+}
+ 
+void peek()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("Character at top is:%c",name[top]);
+    }
+}
+ 
+isempty()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not empty\n");
+    }
+}
+ 
+isfull()
+{
+    if(top==MAX-1)
+    {
+        printf("\nStatic Stack is full\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not full\n");
+    }
+}
+
+Save this above code in the stack library file as ststack.h
+
+#include<stdio.h>
+#include<stdlib.h>
+#include "ststack.h"
+int main()
+{
+    int ch;
+    while(1)
+    {
+        printf("\n-----Static Stack of characters-----\n");
+        printf("\n1.Init\n");
+        printf("2.Push\n");
+        printf("3.Pop\n");
+        printf("4.Peek\n");
+        printf("5.IsEmpty\n");
+        printf("6.IsFull\n");
+        printf("7.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:init();  break;
+            case 2:push(); break;
+            case 3:pop(); break;
+            case 4:peek(); break;
+            case 5:isempty(); break;
+            case 6:isfull(); break;
+            case 7:exit(0);
+        }
+    }
+}
+
+Save this file as stack.c and compile and run the stack.c
+
+Output: 
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 1
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Read the data from the ‘employee.txt’ file and sort on age using Merge sort
+or Quick sort and write the sorted data to another file 'sortedemponage.txt'
+
+#include <stdio.h>
+#include <stdlib.h>
+struct employee
+{
+int age;
+};
+int cntRec(char fnm[])
+{
+int n=0,age;
+FILE *fp;
+fp = fopen(fnm,"r");
+while( fscanf(fp,"%d",&age) != EOF )
+n++;
+fclose(fp);
+return n;
+}
+void Quick_Sort(struct employee *emp,int lb,int ub)
+{
+if( lb < ub )
+{
+int p;
+p = Partition(emp, lb, ub);
+Quick_Sort(emp, lb, p-1);
+Quick_Sort(emp, p+1, ub);
+}
+}
+void sort(struct employee *emp, int n)
+{
+Quick_Sort(emp,0,n-1);
+}
+ 
+int Partition(struct employee *emp, int lb, int ub)
+{
+struct employee temp = emp[lb];
+int down, up;
+down = lb;
+up = ub;
+while( down < up )
+{
+while( down <= ub && emp[down].age <= temp.age ) down++;
+while( emp[up].age > temp.age ) up--;
+if( down < up )
+{
+struct employee t = emp[down];
+emp[down] = emp[up];
+emp[up] = t;
+}
+}
+emp[lb] = emp[up];
+emp[up] = temp;
+return up;
+}
+void fetchRec(struct employee *emp, char fnm[])
+{
+FILE *fp;
+int i=0;
+fp = fopen(fnm,"r");
+while( fscanf(fp,"%d",&emp[i].age) != EOF )
+i++;
+fclose(fp);
+}
+updateFile(struct employee *emp, int n, char fnm[])
+{
+int i;
+FILE *fp;
+fp = fopen(fnm,"w");
+for(i=0; i<n; i++)
+fprintf(fp,"%d\n",emp[i].age);
+fclose(fp);
+}
+main()
+{
+int n=0;
+struct employee *emp;
+n = cntRec("employee.txt");
+emp = malloc(sizeof(struct employee) * n );
+fetchRec(emp,"employee.txt");
+sort(emp,n);
+updateFile(emp,n,"sortedemponage.txt");
+}
+
+
+Save this code as quick.c
+
+Before running this code create an employee.txt file and write ages in that file.
+employee.txt file is required in this program.
+// Open employee.txt file and write ages:
+20
+10
+30
+50
+40 
+// Close the employee.txt file
+Now, Build and Run the code then sortedemponage.txt is generated as output file in the same directory of quick.c file   
+Output: 
+// See the output in sortedemponage.txt
+10
+20
+30
+40
+50
+ 
+
+

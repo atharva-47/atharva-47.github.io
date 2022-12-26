@@ -1,0 +1,237 @@
+Q1. Read the data from the file and sort on names in alphabetical order (use 
+strcmp) using Merge sort and write the sorted data to another file 
+'sortedemponname.txt
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct employee
+{
+char name[30];
+int age;
+float salary;
+};
+void accept(struct employee *p,int k)
+{
+int i=0;
+FILE *fp;
+fp=fopen("svc.txt","r");
+while(fscanf(fp,"%s%d%f",p[i].name,&p[i].age,&p[i].salary)!=EOF)
+{
+i++;
+}
+fclose(fp);
+}
+void display(struct employee *p,int k)
+{int i=0;
+FILE *fp;
+fp=fopen("svc.txt","r");
+while(fscanf(fp,"%s%d%f",p[i].name,&p[i].age,&p[i].salary)!=EOF)
+{
+printf("%s\t%d\t%f\n",p[i].name,p[i].age,p[i].salary);
+i++;
+}
+fclose(fp);
+}
+void merge(struct employee *p,int l,int m,int r)
+{
+int i,j,k;
+int n1=m-l+1;
+int n2=r-m;
+int temp=0;
+struct employee L[n1],R[n2];
+for (i =0;i<n1;i++)
+L[i]=p[l+i];
+for (j=0;j<n2;j++)
+R[j]=p[m+1+j];
+i=0;
+j=0;
+k=l;
+while(i<n1 && j<n2)
+{
+temp=strcmp(L[i].name,R[j].name);
+if (temp<=0)
+{
+p[k]=L[i];
+i++;
+}
+else
+{
+p[k]=R[j];
+j++;
+}
+k++;
+}
+while (i<n1)
+{
+p[k]=L[i];
+i++;
+k++;
+}
+while (j<n2)
+{
+p[k]=R[j];
+j++;
+k++;
+}
+}
+void mergesort(struct employee *p,int low,int high)
+{
+int mid;
+if(low<high)
+{
+mid=(low+high)/2;
+mergesort(p,low,mid);
+mergesort(p,mid+1,high);
+merge(p,low,mid,high);
+}
+}
+void insertfile(struct employee *p,int k)
+{
+int i=0;
+FILE *fp;
+fp=fopen("sortedemponname.txt","w");
+for(i=0;i<k;i++)
+{
+printf("%s %d %f\n",p[i].name,p[i].age,p[i].salary);
+fprintf(fp,"%s %d %f\n",p[i].name,p[i].age,p[i].salary);
+}
+fclose(fp);
+}
+int main()
+{
+struct employee *p=NULL,temp;
+int k=0;
+FILE *fp;
+fp=fopen("svc.txt","r");
+while(fscanf(fp,"%s%d%f",temp.name,&temp.age,&temp.salary)!=EOF)
+{
+k++;
+}
+printf("No of records %d\n",k);
+p=(struct employee *)malloc(sizeof(struct employee)*k);
+accept(p,k);
+printf("Before Sorting\n");
+display(p,k);
+printf("After sorting\n");
+mergesort(p,0,k-1);
+insertfile(p,k);
+return 0;
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+Q2. Write a program that adds two single variable polynomials. Each 
+polynomial should be represented as a list with linked list implementation
+
+
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node
+{ 
+	int coeff,exp;
+	struct node *next;
+};
+
+struct node* create(struct node *f)
+{
+int i,n;
+struct node *s;
+printf("\nEnter no of terms ");
+scanf("%d",&n);
+printf("Enter term in descending order of power ");
+f=(struct node *)malloc(sizeof(struct node));
+printf("\n Enter coeff");
+scanf("%d",&f->coeff);
+printf("\n Enter power ");
+scanf("%d",&f->exp);
+s=f;
+for(i=1;i<n;i++)
+{
+s->next=(struct node *)malloc(sizeof(struct node));
+s=s->next;
+printf("\n Enter coeff");
+scanf("%d",&s->coeff);
+printf("\n Enter power ");
+scanf("%d",&s->exp);
+}
+s->next=NULL;
+return f;
+}
+void display(struct node *f)
+{ struct node *s;
+for(s=f;s!=NULL;s=s->next)
+{ printf("%dx^%d ->",s->coeff,s->exp);
+}
+}
+struct node *Add(struct node *p1,struct node *p2)
+{
+struct node *t1,*t2,*t3=NULL,*nw;
+struct node *p3;
+t1=p1;t2=p2;
+printf("\n%d %d",t1->exp,t2->exp);
+while(t1!=NULL && t2!=NULL)
+{ nw=(struct node*)malloc(sizeof(struct node));
+nw->next=NULL;
+if(t1->exp > t2->exp)
+{
+nw->exp=t1->exp;
+nw->coeff=t1->coeff;
+t1=t1->next;
+}
+else if(t2->exp > t1->exp)
+{
+nw->exp=t2->exp;
+nw->coeff=t2->coeff;
+t2=t2->next;
+}
+else
+{ nw->exp=t1->exp;
+nw->coeff=t1->coeff+t2->coeff;
+t1=t1->next;
+t2=t2->next;
+}
+if(t3==NULL)
+{ p3=nw;
+t3=nw;
+}
+else
+{ t3->next=nw;
+t3=t3->next;
+}
+}
+while(t1!=NULL)
+{
+nw=(struct node*)malloc(sizeof(struct node));
+nw->next=NULL;
+nw->exp=t1->exp;
+nw->coeff=t1->coeff;
+t1=t1->next;
+t3->next=nw;;
+t3=t3->next;
+}
+while(t2!=NULL)
+{
+nw=(struct node*)malloc(sizeof(struct node));
+nw->next=NULL;
+nw->exp=t2->exp;
+nw->coeff=t2->coeff;
+t2=t2->next;
+t3->next=nw;
+t3=t3->next;
+}
+return p3;
+}
+main()
+{ struct node *p1=NULL,*p2=NULL,*p3=NULL;
+p1=create(p1);
+p2=create(p2);
+printf("\n 1st Polynomial is : ");
+display(p1);
+printf("\n 2nd Polynomial is : ");
+display(p2);
+p3=Add(p1,p2);
+printf("\n Addition of 2 Polynomial is ");
+display(p3);
+}
+

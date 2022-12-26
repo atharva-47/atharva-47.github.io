@@ -1,0 +1,398 @@
+Q1. Implement a stack library (ststack.h) of integers using a static
+implementation of the stack and implementing the operations like init(S), 
+S=Push(S,x) and isEmpty(S). Write a driver program that includes stack library 
+and calls different stack operations.
+
+#include<stdio.h>
+#define MAX 15
+ 
+char name[MAX],top;
+ 
+void init()
+{
+    top=-1;
+    printf("\nStatic Stack Initiaized\n");
+}
+ 
+void push()
+{
+    if(top==MAX-1)
+    {
+        printf("\nStatic Stack is full\n");
+    }
+    else
+    {
+        top++;
+        printf("Enter a character to be push:");
+        scanf(" %c",&name[top]);
+    }
+}
+ 
+void pop()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("Poped value is:%c",name[top]);
+        top--;
+    }
+}
+ 
+void peek()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("Character at top is:%c",name[top]);
+    }
+}
+ 
+isempty()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not empty\n");
+    }
+}
+ 
+isfull()
+{
+    if(top==MAX-1)
+    {
+        printf("\nStatic Stack is full\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not full\n");
+    }
+}
+
+Save this above code in the stack library file as ststack.h
+
+#include<stdio.h>
+#include<stdlib.h>
+#include "ststack.h"
+int main()
+{
+    int ch;
+    while(1)
+    {
+        printf("\n-----Static Stack of characters-----\n");
+        printf("\n1.Init\n");
+        printf("2.Push\n");
+        printf("3.Pop\n");
+        printf("4.Peek\n");
+        printf("5.IsEmpty\n");
+        printf("6.IsFull\n");
+        printf("7.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:init();  break;
+            case 2:push(); break;
+            case 3:pop(); break;
+            case 4:peek(); break;
+            case 5:isempty(); break;
+            case 6:isfull(); break;
+            case 7:exit(0);
+        }
+    }
+}
+Save this file as stack.c and compile and run the stack.c
+
+Output: 
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 1
+
+Static Stack Initiaized
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 2
+Enter a character to be push:10
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice:
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 5
+
+Static Stack is not empty
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 6
+
+Static Stack is not full
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 2
+Enter a character to be push:3
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 3
+Poped value is:3
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 10
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 4
+Character at top is:1
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 1
+
+Static Stack Initiaized
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 10
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 2
+Enter a character to be push:5
+
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 4
+Character at top is:5
+-----Static Stack of characters-----
+
+1.Init
+2.Push
+3.Pop
+4.Peek
+5.IsEmpty
+6.IsFull
+7.Exit
+Enter your choice: 7
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. There are lists where insertion should ensure the ordering of data elements. 
+Since the elements are in ascending order the search can terminate once equal 
+or greater element is found. Implement a singly linked list of ordered 
+integers(ascending/descending) with insert, search, and display operations
+
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+int data;
+struct node *next;
+};
+void insert(struct node **head,int data)
+{
+struct node *newnode;
+newnode=malloc(sizeof(struct node));
+newnode->data=data;
+newnode->next=NULL;
+if(*head==NULL)
+*head=newnode;
+else
+{
+struct node *temp=*head,*prev;
+while(temp)
+{
+if(temp->data >=data)
+{
+if(temp==*head)
+{
+newnode->next=*head;
+*head=newnode;
+}
+else
+{
+prev->next=newnode;
+newnode->next=temp;
+}
+break;
+}
+else
+{
+prev=temp;
+temp=temp->next;
+}
+}
+if(!temp)
+prev->next=newnode;
+}
+}
+void display(struct node *temp)
+{
+if(!temp)
+printf("\n\tEmpty list\n");
+else
+{
+while(temp)
+{
+printf("\t%d ",temp->data);
+temp=temp->next;
+}
+}
+}
+void search(struct node *head , int data)
+{
+struct node *temp= head;
+int cnt=0;
+while(temp && temp->data != data)
+{
+temp=temp->next;
+cnt++;
+}
+if(temp)
+printf("%d is at %d position\n",data,cnt);
+else
+printf("No data\n");
+getchar();getchar();
+}
+int menu()
+{
+system("clear");
+int ch;
+printf("\n\t0.Exit\n\t1.Create list\n\t2.Display list\n\t3.Search node \n\tEnter your choice :");
+scanf("%d",&ch);
+return ch;
+}
+main()
+{
+struct node *head=NULL;
+int ch;
+while((ch=menu())!=0)
+{
+if(ch==1)
+{
+int i,size;
+printf("How many nodes you want :");
+scanf("%d",&size);
+for(i=0;i<size;i++)
+insert(&head,random()%100);
+}
+else
+if(ch==2)
+{
+display(head);
+getchar();getchar();
+}
+else
+if(ch==3)
+{
+int i,node;
+printf("Enter node to be searched :");
+scanf("%d",&node);
+search(head,node);
+getchar();getchar();
+}
+}
+}
+

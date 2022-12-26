@@ -1,0 +1,99 @@
+Q1. Create a random array of n integers. Accept a value x from user and use 
+linear search algorithm to check whether the number is present in the array 
+or not and output the position if the number is present. 
+
+#include<stdio.h>
+int lsearch(int a[10],int n,int num);
+void generate(int num[10],int n);
+void display(int num[10],int n);
+int accept();
+int main()
+{
+    int num[10],i,n,num1;
+    printf("How many numbers: ");
+    scanf("%d",&n);
+    printf("\nThese are random numbers generated: ");
+    generate(num,n);
+    display(num,n);
+    num1=accept();
+    i=lsearch(num,n,num1);
+    if(i==-1)
+    printf("\nNumber not found\n");
+    else printf("\nNumber found at %d location\n",i+1);
+    return 0;
+}
+void generate(int num[10],int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+        num[i]=rand()%100;
+}
+int lsearch(int a[10],int n,int num1)
+{
+    int i;
+    for(i=0;i<n;i++)
+    {
+        if(a[i]==num1)
+        return i;
+    }
+    return -1;
+}
+int accept()
+{
+    int x;
+    printf("\nEnter the number you want to search: ");
+    scanf("%d",&x);
+    return search;
+}
+void display(int num[10],int n)
+{
+    int i;
+    for(i=0;i<n;i++)
+    {
+        printf("%d ",num[i]);
+    }
+}
+
+Output:
+
+How many numbers: 6
+These are random numbers generated: 83 86 77 15 93 35 
+Enter the number you want to search: 83
+Number found at 1 location
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. A doubly ended queue allows additions and deletions from both the ends 
+that is front and rear. Initially additions from the front will not be possible. 
+To avoid this situation, the array can be treated as if it were circular. 
+Implement a queue library (dstqueue.h) of integers using a static 
+implementation of the circular queue and implementing the following
+operations. [20]
+a. isFull(Q)
+b. addFront(Q)
+c. getRear(Q)
+d. deleteRear(Q)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,163 @@
+Q1. Accept n values in array from user. Accept a value x from user and use 
+sentinel linear search algorithm to check whether the number is present in the 
+array or not and output the position if the number is present
+
+#include<stdio.h>
+#define max 10
+
+int main()
+{
+int a[max],k,i,n,flag=0,index;
+printf("Enter Size of array:");
+  scanf("%d",&n);
+generate(a,n);
+printf("Random elements are\n");
+   for(i=0;i<n;i++)
+      printf("%d\n",a[i]);
+
+printf("Enter number to search: ");
+   scanf("%d",&k);
+Sentinelsearch(a,n,k);
+}
+void generate(int a[],int n)
+{
+int i;
+for(i=0;i<n;i++)
+   a[i]=rand()%100;
+
+}
+void Sentinelsearch(int a[],int n,int k)
+{
+int i,flag=0,index ;
+i=0;
+a[n]=k;
+while(a[i]!=k)
+    i++;
+if(i<n)
+    printf("Searched found at index %d",i+1);
+else
+    printf("Not Found");
+
+}
+
+Output :
+Enter Size of array:7
+Random elements are
+41
+67
+34
+0
+69
+24
+78
+Enter number to search: 69
+Searched found at index 5
+Process returned 0 (0x0)   execution time : 9.575 s
+Press any key to continue.
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Implement a priority queue library (PriorityQ.h) of integers using a static implementation of the queue and implementing the below two 
+operations. Write a driver program that includes queue library and calls different queue operations.
+1) Add an element with its priority into the queue.
+2) Delete an element from queue according to its priority. 
+
+
+Header File : PriorityQ.h
+
+#include<stdio.h>
+int Q[20];
+int f,R;
+void init()
+{
+	f=R=-1;
+}
+
+int isempty()
+{
+	if(f==R)
+	return 1;
+	else
+	return 0;
+}
+
+int isfull()
+{
+	if(R==19)
+	return 1;
+	else return 0;
+}
+
+void Add(int no)
+{ 
+	int i;
+	if(isfull()==1)
+	printf("Queue is Full ");
+	else
+	{
+		for(i=R;i>f;i--)
+		{ 
+			if(no<Q[i])
+			Q[i+1]=Q[i];
+			else
+			break;
+		}
+		Q[i+1]=no;
+		R++;
+	}
+}
+
+int Delete()
+{ 
+	int no;
+	if(isempty()==1)
+	printf("Queue is empty ");
+	else
+	{
+		f++;
+		no=Q[f];
+	}
+	return no;
+}
+
+void display()
+{
+	int i;
+	for(i=f+1;i<=R;i++)
+	{ 
+		printf("%d ",Q[i]);
+	}
+}
+
+
+Program File :
+
+#include<stdio.h>
+#include "PriorityQ.h"
+main()
+{
+	int n,ch;
+	init();
+	do
+	{
+		printf("\n\n1.Add \n2.Delete \n3.Display \n0.EXit");
+		printf("\nEnter choice ");
+		scanf("%d",&ch);
+		switch(ch)
+		{ 
+			case 1:printf("\nEnter element ");
+				scanf("%d",&n);
+				Add(n);
+				break;
+			case 2:if(isempty()==1)
+					printf("\nQueue is empty ");
+					else
+					printf("deleted elemet =%d",Delete());
+					break;
+			case 3:display();
+					break;
+			case 0:break;
+			default:printf("\nInvalid choice ");
+		}
+	}while(ch!=0);
+}

@@ -1,0 +1,203 @@
+Q1. Write a program that reverses a string of characters. The function should 
+use a stack library (cststack.h). Use a static implementation of the stack
+
+#include<stdio.h>
+#include<string.h>
+#define MAX 15
+ 
+char name[MAX],top;
+ 
+void init()
+{
+    top=-1;
+    printf("\nStatic Stack Initiaized\n");
+}
+ 
+void push(char c)
+{
+        top++;
+        name[top]=c;
+}
+ 
+char pop()
+{
+    return name[top--];
+}
+ 
+isempty()
+{
+    if(top==-1)
+    {
+        printf("\nStatic Stack is empty\n");
+    }
+    else
+    {
+        printf("\nStatic Stack is not empty\n");
+    }
+}
+
+
+Save this above code in the stack library file as cststack.h
+
+
+void reverse();
+#include<stdio.h>
+#include<stdlib.h>
+#include "cststack.h"
+int main()
+{
+    int ch,i;
+    char string[15];
+    while(1)
+    {
+        printf("\n-----Static Stack to check reverese of a string-----\n");
+        printf("\n1.Init\n");
+        printf("2.Reverse String\n");
+        printf("3.IsEmpty\n");
+        printf("4.Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d",&ch);
+        switch(ch)
+        {
+            case 1:init();  break;
+            case 2: reverse(); break;
+            case 3:isempty(); break;
+            case 4:exit(0);
+        }
+   }
+}
+ 
+void reverse()
+{
+    char str[20];
+    int i;
+    printf("\nEnter the string : " );
+    scanf("%s",str);
+     
+    for(i=0;i<strlen(str);i++)
+        push(str[i]);
+ 
+    for(i=0;i<strlen(str);i++)
+        str[i]=pop();
+    printf("\nReversed string is : ");
+    printf("%s",str);
+}
+Save this file as stack.c and compile and run the stack.c
+
+Output:
+-----Static Stack to check reverese of a string-----
+
+1.Init
+2.Reverse String
+3.IsEmpty
+4.Exit
+Enter your choice: 1
+
+Static Stack Initiaized
+
+-----Static Stack to check reverese of a string-----
+
+1.Init
+2.Reverse String
+3.IsEmpty
+4.Exit
+Enter your choice: 2
+
+Enter the string : abbcaab
+
+Reversed string is : baacbba
+-----Static Stack to check reverese of a string-----
+
+1.Init
+2.Reverse String
+3.IsEmpty
+4.Exit
+Enter your choice: 3
+
+Static Stack is empty
+
+-----Static Stack to check reverese of a string-----
+
+1.Init
+2.Reverse String
+3.IsEmpty
+4.Exit
+Enter your choice: 4
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Q2. Read the data from the file “employee.txt” and sort on names in 
+alphabetical order (use strcmp) using insertion sort or selection sort
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct employee
+{
+	char name[20];
+	int age;
+}emp[10];
+
+int readfile(struct employee a[])
+{
+	int i=0;
+	FILE*fp;
+	if((fp=fopen("emp.txt","r"))!=NULL)
+	{
+		while(!feof(fp))
+		{
+			fscanf(fp,"%s%d",&a[i].name,&a[i].age);
+			i++;
+		}
+	}return i-1;
+}
+
+void InsertionSort(struct employee a[],int n)
+{ 
+	int i,j;
+	struct employee key;
+	for(i=1; i<n; i++)
+	{
+		key=a[i];
+		for(j=i-1; j>=0; j--)
+		{
+			if(strcmp(a[j].name,key.name)>0)
+			{
+				a[j+1]=a[j];
+			}
+		else
+			break;
+		}
+	a[j+1]=key;
+	}
+}
+
+void writefile(struct employee a[],int n)
+{
+	int i=0;
+	FILE*fp;
+	if((fp=fopen("insertionsort.txt","w"))!=NULL)
+	{
+		for(i=0;i<n;i++)
+		{
+			fprintf(fp,"%s %d\n",a[i].name,a[i].age);
+		}
+	}
+}
+
+int main()
+{
+	int n;
+	n=readfile(emp);
+	if(n==-1)
+	printf("File Not Found");
+	else
+	{
+		InsertionSort(emp,n);
+		writefile(emp,n);
+		printf("File Sorted");
+	}
+}

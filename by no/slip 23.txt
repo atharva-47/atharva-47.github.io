@@ -1,0 +1,286 @@
+Q1. Implement a priority queue library (PriorityQ.h) of integers using a static 
+implementation of the queue and implementing the below operation 
+
+
+Header File : PriorityQ.h
+#include<stdio.h>
+int Q[20];
+int f,R;
+void init()
+{
+	f=R=-1;
+}
+
+int isempty()
+{
+	if(f==R)
+	return 1;
+	else
+	return 0;
+}
+
+int isfull()
+{
+	if(R==19)
+	return 1;
+	else return 0;
+}
+
+void Add(int no)
+{ 
+	int i;
+	if(isfull()==1)
+	printf("Queue is Full ");
+	else
+	{
+		for(i=R;i>f;i--)
+		{ 
+			if(no<Q[i])
+			Q[i+1]=Q[i];
+			else
+			break;
+		}
+		Q[i+1]=no;
+		R++;
+	}
+}
+
+int Delete()
+{ 
+	int no;
+	if(isempty()==1)
+	printf("Queue is empty ");
+	else
+	{
+		f++;
+		no=Q[f];
+	}
+	return no;
+}
+
+void display()
+{
+	int i;
+	for(i=f+1;i<=R;i++)
+	{ 
+		printf("%d ",Q[i]);
+	}
+}
+
+
+Program File : PriorityQ.c
+
+#include<stdio.h>
+#include "PriorityQ.h"
+main()
+{
+	int n,ch;
+	init();
+	do
+	{
+		printf("\n\n1.Add \n2.Delete \n3.Display \n0.EXit");
+		printf("\nEnter choice ");
+		scanf("%d",&ch);
+		switch(ch)
+		{ 
+			case 1:printf("\nEnter element ");
+					scanf("%d",&n);
+					Add(n);
+					break;
+			case 2:if(isempty()==1)
+					printf("\nQueue is empty ");
+					else
+					printf("deleted elemet =%d",Delete());
+					break;
+			case 3:display();
+					break;
+			case 0:break;
+			default:printf("\nInvalid choice ");
+		}
+	}while(ch!=0);
+}
+
+	
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Read the data from file ‘sortedcities.txt’ containing sorted names of cities 
+and their STD codes. Accept a name of the city from user and use binary search 
+algorithm to check whether the name is present in the file and output the STD 
+code, otherwise output “city not in the list”.
+
+
+#include<stdio.h>
+
+#include<string.h>
+
+typedef struct city
+
+{
+
+    char name[20];
+
+    int code;
+
+} city;
+
+
+
+//Fileread
+
+int fileread(city a[20])
+
+{
+
+    FILE *fp;
+
+    int i=0;
+
+
+
+    fp=fopen("sortcities.txt","r");
+
+    if(fp==NULL)
+
+        printf("File Not Exist");
+
+    else
+
+    {
+
+        while(!feof(fp))
+
+        {
+
+            fscanf(fp,"%s%d", a[i].name, &a[i].code);
+
+            i++;
+
+        }
+
+        fclose(fp);
+
+    }
+
+    return i-1;
+
+}
+
+
+
+//Main
+
+int main()
+
+{
+
+    int i, n,flag=0;
+
+    char key[20];
+
+    city a[20];
+
+    n = fileread(a);
+
+
+
+    for(int i=0; i<n; i++)
+
+        printf("%s %d\n", a[i].name, a[i].code);
+
+
+
+    binarysearch(0,n-1);
+
+}
+
+
+
+void binarysearch(int low,int high)
+
+{
+
+    int n;
+
+    char key[20];
+
+    city a[20];
+
+    n=fileread(a);
+
+    int mid;
+
+    printf("\nEnter City: ");
+
+    scanf("%s",&key);
+
+
+
+    while(low<=high)
+
+    {
+
+        mid=(low+high)/2;
+
+        if(strcmp(key,a[mid].name)==0)
+
+        {
+
+
+
+            printf("City Code: %d",a[mid].code);
+
+            exit(0);
+
+        }
+
+        else if(strcmp(key,a[mid].name)>0)
+
+        {
+
+            high=high;
+
+            low=mid+1;
+
+        }
+
+        else
+
+        {
+
+            low=low;
+
+            high=mid-1;
+
+        }
+
+    }
+
+
+
+    printf("City Not In List\n");
+
+}
+
+sortedcities.txt file:
+
+Bangalore 80
+Chennai 44
+Delhi 11
+Hyderabad 40
+kolkata 23
+Mumbai 22
+
+output:
+
+
+Bangalore 80
+Chennai 44
+Delhi 11
+Hyderabad 40
+kolkata 23
+Mumbai 22
+
+Enter City: Delhi
+City Code: 11
+Process returned 0 (0x0)   execution time : 7.119 s
+Press any key to continue

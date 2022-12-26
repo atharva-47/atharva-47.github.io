@@ -1,0 +1,233 @@
+Q1. Write a program to convert an infix expression of the form (a*(b+c)*((da)/b)) into its equivalent postfix notation. Consider usual precedence’s of 
+operators. Use stack library of stack of characters using static 
+implementation.
+
+Header File : stack.h
+
+#include<stdio.h>
+char s[20];
+int top;
+
+void init()
+	{
+		top=-1;
+	}
+
+int isempty()
+{ 
+	if(top==-1)
+	return 1;
+	else return 0;
+}
+
+int isfull()
+{ 
+	if(top==19)
+	return 1;
+	else
+	return 0;
+}
+
+void push(char data)
+{
+	if(isfull()==1)
+	printf("\nStack is full ");
+	else
+	{ 
+		top++;
+		s[top]=data;
+	}
+}
+
+char pop()
+{ 
+	char data;
+	if(isempty()==1)
+	printf("\nStack is empty ");
+	else
+	{ 
+		data=s[top];
+		top--;
+		return data;
+	}
+}
+
+int peek()
+{ 
+	return s[top];
+}
+
+
+Program File : stack.c
+
+#include<stdio.h>
+#include "stack.h"
+
+int priority(char ch)
+{ 
+	switch(ch)
+	{
+		case '(':return 0;
+		case '+':
+		case '-':return 1;
+		case '*':
+		case '/':return 2;
+		case '^':
+		case '$':return 3;
+	}
+	return 0;
+}
+
+void convert(char str[20])
+{
+	int i,j=0;
+	char post[20],ch,ch1;
+	init();
+	for(i=0;str[i]!='\0';i++)
+	{ 
+		ch=str[i];
+		switch(ch)
+		{
+			case '(':push(ch);
+			break;
+			case '+':
+			case '-':		
+			case '*':
+			case '/':
+			case '$':
+			case '^':
+		while(!isempty() && (priority(peek())>=priority(ch)))
+				{
+					post[j]= pop();
+					j++;
+				}
+				push(ch);
+				break;
+			case ')':while((ch1=pop())!='(')
+				{ 
+					post[j]=ch1;
+					j++;
+				}
+				break;
+				default:post[j]=ch;
+				j++;
+		}
+	}
+	while(!isempty())
+	{ 
+		post[j]=pop();
+		j++;
+	}
+	post[j]='\0';
+	printf("\n Postfix string = %s ",post);
+}
+
+main()
+{
+	char infix[20];
+	printf("\nEnter the infix expression ");
+	scanf("%s",infix);
+	convert(infix);
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+Q2 Read the data from the ‘employee.txt’ file and sort on age using Counting 
+sort and Quick sort and write the sorted data to another file 
+'sortedemponage.txt'
+
+employee.txt
+20
+10
+30
+50
+40 
+
+#include <stdio.h>
+#include <stdlib.h>
+struct employee
+{
+int age;
+};
+int cntRec(char fnm[])
+{
+int n=0,age;
+FILE *fp;
+fp = fopen(fnm,"r");
+while( fscanf(fp,"%d",&age) != EOF )
+n++;
+fclose(fp);
+return n;
+}
+void Quick_Sort(struct employee *emp,int lb,int ub)
+{
+if( lb < ub )
+{
+int p;
+p = Partition(emp, lb, ub);
+Quick_Sort(emp, lb, p-1);
+Quick_Sort(emp, p+1, ub);
+}
+}
+void sort(struct employee *emp, int n)
+{
+Quick_Sort(emp,0,n-1);
+}
+ 
+int Partition(struct employee *emp, int lb, int ub)
+{
+struct employee temp = emp[lb];
+int down, up;
+down = lb;
+up = ub;
+while( down < up )
+{
+while( down <= ub && emp[down].age <= temp.age ) down++;
+while( emp[up].age > temp.age ) up--;
+if( down < up )
+{
+struct employee t = emp[down];
+emp[down] = emp[up];
+emp[up] = t;
+}
+}
+emp[lb] = emp[up];
+emp[up] = temp;
+return up;
+}
+void fetchRec(struct employee *emp, char fnm[])
+{
+FILE *fp;
+int i=0;
+fp = fopen(fnm,"r");
+while( fscanf(fp,"%d",&emp[i].age) != EOF )
+i++;
+fclose(fp);
+}
+void updateFile(struct employee *emp, int n, char fnm[])
+{
+int i;
+FILE *fp;
+fp = fopen(fnm,"w");
+for(i=0; i<n; i++)
+fprintf(fp,"%d\n",emp[i].age);
+fclose(fp);
+}
+int main()
+{
+int n=0;
+struct employee *emp;
+n = cntRec("slip92-employee.txt");
+emp = malloc(sizeof(struct employee) * n );
+fetchRec(emp,"slip92-employee.txt");
+sort(emp,n);
+updateFile(emp,n,"sortedemponage.txt");
+}
+
+sortedemponage.txt
+
+10
+20
+30
+40
+50

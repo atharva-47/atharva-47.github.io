@@ -1,0 +1,118 @@
+Q1. Sort a random array of n integers (accept the value of n from user) in 
+ ascending order by using insertion sort algorithm. 
+
+#include <stdio.h>
+#define Max 100
+int main(void)
+{
+  int n,array[Max],i,j,temp;
+  printf("Enter the size of integer array: ");
+  scanf("%d", &n);
+  printf("\nEnter the elements of integer array: ");
+  for (i = 0; i < n; i++)
+   {
+    scanf("%d ", &array[i]);
+   }
+  for (i = 1 ; i <= n - 1; i++)
+   {
+    j = i;
+    while ( j > 0 && array[j-1] > array[j])
+     {
+      temp = array[j];
+      array[j]   = array[j-1];
+      array[j-1] = temp;
+      j--;
+     }
+  }
+  printf("\nSorted array in ascending order: ");
+  for (i = 0; i<= n - 1; i++)
+  {
+    printf("%d ", array[i]);
+  }
+}
+
+
+Output:
+Enter the size of integer array: 6
+Enter the elements of integer array: 3 1 7 4 2 8
+Sorted array in ascending order: 1 2 3 4 7 8 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+Q2. Write a C program to evaluate postfix expression. 
+
+#include<stdio.h>     
+#include<conio.h>        
+#include<string.h>       
+#define MAX 50              
+int stack[MAX];            
+char post[MAX];            
+int top=-1;                  
+void pushstack(int tmp);       
+void evaluate(char c);         
+void main()
+{
+   int i,l;
+   
+   printf("Insert a postfix notation :: ");
+   gets(post);                    
+   l=strlen(post);               
+   for(i=0;i<l;i++)
+   {
+      if(post[i]>='0' && post[i]<='9')
+      {
+          pushstack(i);             
+      }
+      if(post[i]=='+' || post[i]=='-' || post[i]=='*' ||
+      post[i]=='/' || post[i]=='^')       
+      {
+          evaluate(post[i]);             
+      }
+   }                      
+   printf("\n\nResult :: %d",stack[top]);
+   getch();
+}
+
+void pushstack(int tmp)          
+{
+   top++;                             
+   stack[top]=(int)(post[tmp]-48);   
+}
+
+void evaluate(char c)       
+{
+   int a,b,ans;        
+   a=stack[top];       
+   stack[top]='\0';     
+   top--;                
+   b=stack[top];         
+   stack[top]='\0';     
+   top--;                
+   switch(c)     
+   {
+      case '+':          
+          ans=b+a;
+          break;
+      case '-':           
+          ans=b-a;
+          break;
+      case '*':            
+          ans=b*a;
+          break;
+      case '/':           
+          ans=b/a;
+          break;
+      case '^':      
+          ans=b^a;
+          break;
+      default:
+          ans=0;      
+   }
+   top++;           
+   stack[top]=ans;        
+}
+
+
+Output:
+
+evaluate postfix expression

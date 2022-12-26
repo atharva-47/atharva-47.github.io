@@ -1,0 +1,100 @@
+Q1. Read the ‘n’ numbers from user and sort using bubble sort.
+
+#include <stdio.h>
+#define MAXSIZE 10
+ 
+void main()
+{
+    int array[MAXSIZE];
+    int i, j, num, temp;
+ 
+    printf("Enter the value of num \n");
+    scanf("%d", &num);
+    printf("Enter the elements one by one \n");
+    for (i = 0; i < num; i++)
+    {
+        scanf("%d", &array[i]);
+    }
+    printf("Input array is \n");
+    for (i = 0; i < num; i++)
+    {
+        printf("%d\n", array[i]);
+    }
+    /*   Bubble sorting begins */
+    for (i = 0; i < num; i++)
+    {
+        for (j = 0; j < (num - i - 1); j++)
+        {
+            if (array[j] > array[j + 1])
+            {
+                temp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = temp;
+            }
+        }
+    }
+    printf("Sorted array is...\n");
+    for (i = 0; i < num; i++)
+    {
+        printf("%d\n", array[i]);
+    }
+}
+
+
+---------------------------------------------------------------------------------
+Q2. Write a program to reverse the elements of a queue using queue library. 
+ Implement basic queue operations init, enqueue, dequeue. 
+
+#include<stdio.h>
+int f = -1,r = -1;
+int q[50];
+void enqueue(int data,int l)//Enqueue for inserting data
+{
+	if(r==l-1){
+		printf("Queue is full");
+	}
+	else if((f==-1)&&(r==-1)){
+		f = r = 0;
+		q[r] = data;
+	}
+	else
+	{
+		r++;
+		q[r] = data;	
+	}
+}
+void print()//Print function for printing the data
+{
+	int i;
+	for(i=f;i<=r;i++)
+	{
+		printf("\n%d",q[i]);
+	}
+}
+void reverse()//reverse function for reversing the data
+{
+	int i,j,t;
+	for(i=f,j=r;i<j;i++,j--){
+		t = q[i];
+		q[i] = q[j];
+		q[j] = t;
+	}
+}
+void main()
+{
+	int n,i=0,t;
+	printf("Enter the size of Queue :\n");
+	scanf("%d",&n);
+	printf("\nEnter the data for Queue: \n");
+	while(i<n){
+		scanf("%d",&t);
+		enqueue(t,n);
+		i++;
+	}
+	printf("\nQueue which you have entered:-");
+	print();
+	reverse();
+	printf("\nQueue after reversing:-");
+	print();
+	
+}
