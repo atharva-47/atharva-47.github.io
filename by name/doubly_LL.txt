@@ -1,0 +1,12 @@
+//Program for calling functions for operations on doubly LL.
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "doubly_LL_library.h"
+
+int main()
+{
+	struct node *start=NULL;
+	
+	start=createList(start);
+}
