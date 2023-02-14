@@ -1,4 +1,4 @@
 This is a Brave Rewards publisher verification file.
 
 Domain: atharva-47.github.io
-Token: 3addea1c02defc51acbf5f97bd112ca660d18d5db4b9494c789e27b7062fce2d
+Token: f7ce8cf00272ae4f68bfd3b4c97970ff54134124814aa603863edeac8dc3d6ab
