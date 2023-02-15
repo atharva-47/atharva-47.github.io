@@ -1,4 +1,0 @@
-Pune	10
-Mumbai	11
-Nagpur	12
-Nashik	13
