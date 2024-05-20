@@ -42,7 +42,7 @@ def read_docx(file):
 def summarize_document(document, num_sentences=2):
     # Split document into sentences
     sentences = sent_tokenize(document)
-    # Preprocess the document
+    # Preprocess the sentences
     processed_sentences = [preprocess_text(sentence) for sentence in sentences]
     # Calculate TF-IDF vectors
     tfidf_matrix = calculate_tfidf_vectors(processed_sentences)
