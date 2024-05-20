@@ -15,12 +15,16 @@ def summarize(text):
     return summary
 
 def extract_text_from_pdf(file):
-    text = ""
-    with open(file, 'rb') as f:
-        reader = PyPDF2.PdfFileReader(f)
-        for page_num in range(reader.numPages):
-            text += reader.getPage(page_num).extractText()
-    return text
+    try:
+        text = ""
+        with open(file, 'rb') as f:
+            reader = PyPDF2.PdfFileReader(f)
+            for page_num in range(reader.numPages):
+                text += reader.getPage(page_num).extractText()
+        return text
+    except Exception as e:
+        st.error(f"An error occurred while extracting text from the PDF: {str(e)}")
+        return ""
 
 def extract_text_from_docx(file):
     doc = Document(file)
