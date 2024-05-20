@@ -1,7 +1,7 @@
 import streamlit as st
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 from docx import Document
-import fitz  # Importing PyMuPDF for PDF extraction
+import PyPDF2  # Importing PyPDF2 for PDF extraction
 
 # Load model and tokenizer
 model_name = "t5-small"
@@ -16,9 +16,10 @@ def summarize(text):
 
 def extract_text_from_pdf(file):
     text = ""
-    with fitz.open(file) as pdf:
-        for page in pdf:
-            text += page.get_text()
+    with open(file, 'rb') as f:
+        reader = PyPDF2.PdfFileReader(f)
+        for page_num in range(reader.numPages):
+            text += reader.getPage(page_num).extractText()
     return text
 
 def extract_text_from_docx(file):
