@@ -5,3 +5,4 @@ sentencepiece
 python-docx 
 PyPDF2
 pdfplumber
+sklearn
