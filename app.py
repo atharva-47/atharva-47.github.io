@@ -1,9 +1,13 @@
 import streamlit as st
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import pandas as pd
 import PyPDF2
 import docx
+import nltk
+from nltk.tokenize import sent_tokenize
+
+# Download NLTK resources
+nltk.download('punkt')
 
 # Function to preprocess text
 def preprocess_text(text):
@@ -38,6 +42,8 @@ def read_docx(file):
 def summarize_document(document, num_sentences=2):
     # Preprocess the document
     processed_document = preprocess_text(document)
+    # Split document into sentences
+    sentences = sent_tokenize(processed_document)
     # Calculate TF-IDF vectors
     tfidf_matrix = calculate_tfidf_vectors([processed_document,])
     # Calculate cosine similarity between sentences and document
