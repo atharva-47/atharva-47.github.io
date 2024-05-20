@@ -25,13 +25,17 @@ def extract_text_from_pdf(file):
     except Exception as e:
         st.error(f"An error occurred while extracting text from the PDF: {str(e)}")
         return ""
-
+    
 def extract_text_from_docx(file):
-    doc = Document(file)
-    text = ""
-    for para in doc.paragraphs:
-        text += para.text
-    return text
+    try:
+        doc = Document(file)
+        text = ""
+        for para in doc.paragraphs:
+            text += para.text
+        return text
+    except Exception as e:
+        st.error(f"An error occurred while extracting text from the DOCX file: {str(e)}")
+        return ""
 
 # Streamlit app
 st.title('Document Summarization')
