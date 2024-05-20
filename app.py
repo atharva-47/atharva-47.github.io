@@ -1,7 +1,7 @@
 import streamlit as st
 from transformers import T5ForConditionalGeneration, T5Tokenizer
-import pdfplumber
 from docx import Document
+import fitz  # Importing PyMuPDF for PDF extraction
 
 # Load model and tokenizer
 model_name = "t5-small"
@@ -15,11 +15,11 @@ def summarize(text):
     return summary
 
 def extract_text_from_pdf(file):
-    with pdfplumber.open(file) as pdf:
-        text = ""
-        for page in pdf.pages:
-            text += page.extract_text()
-        return text
+    text = ""
+    with fitz.open(file) as pdf:
+        for page in pdf:
+            text += page.get_text()
+    return text
 
 def extract_text_from_docx(file):
     doc = Document(file)
