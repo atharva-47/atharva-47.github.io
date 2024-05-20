@@ -7,3 +7,4 @@ PyPDF2
 pdfplumber
 scikit-learn
 nltk
+gensim==4.1.2
