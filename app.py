@@ -1,11 +1,5 @@
 import streamlit as st
-import requests
-
-# Define the TextAnalysis API key
-API_KEY = "your_api_key_here"
-
-# Define the TextAnalysis Summarization API endpoint
-SUMMARIZATION_API_URL = "https://api.textanalysis.ai/text-summarizer"
+from gensim.summarization import summarize
 
 # Define the Streamlit app
 def main():
@@ -24,27 +18,12 @@ def main():
         elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":  # For DOCX files
             raw_text = read_docx(uploaded_file)
         
-        # Make request to the Summarization API
-        data = {
-            "text": raw_text,
-            "sentences_count": 2  # Adjust this parameter as needed
-        }
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {API_KEY}"
-        }
-        response = requests.post(SUMMARIZATION_API_URL, json=data, headers=headers)
+        # Generate summary using TextRank algorithm
+        summary = summarize(raw_text)
         
-        # Check if request was successful
-        if response.status_code == 200:
-            # Get the summary from the response
-            summary = response.json().get("summary")
-            
-            # Display the summary
-            st.subheader("Summary")
-            st.write(summary)
-        else:
-            st.error("Failed to summarize the document. Please try again.")
+        # Display the summary
+        st.subheader("Summary")
+        st.write(summary)
 
 # Entry point of the app
 if __name__ == "__main__":
