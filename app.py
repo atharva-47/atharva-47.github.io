@@ -25,7 +25,7 @@ def extract_text_from_pdf(file):
     except Exception as e:
         st.error(f"An error occurred while extracting text from the PDF: {str(e)}")
         return ""
-    
+
 def extract_text_from_docx(file):
     try:
         doc = Document(file)
@@ -42,6 +42,8 @@ st.title('Document Summarization')
 
 # File upload
 uploaded_file = st.file_uploader("Upload a DOCX or PDF file", type=["docx", "pdf"])
+
+text = ""  # Initialize text variable
 
 if uploaded_file is not None:
     file_type = uploaded_file.type.split('/')[1]
