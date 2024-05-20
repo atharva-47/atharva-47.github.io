@@ -1,61 +1,77 @@
 import streamlit as st
-from transformers import T5ForConditionalGeneration, T5Tokenizer
-from docx import Document
-import PyPDF2  # Importing PyPDF2 for PDF extraction
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import pandas as pd
+import PyPDF2
+import docx
 
-# Load model and tokenizer
-model_name = "t5-small"
-model = T5ForConditionalGeneration.from_pretrained(model_name)
-tokenizer = T5Tokenizer.from_pretrained(model_name)
+# Function to preprocess text
+def preprocess_text(text):
+    # Convert text to lowercase
+    text = text.lower()
+    return text
 
-def summarize(text):
-    inputs = tokenizer.encode("summarize: " + text, return_tensors="pt", max_length=512, truncation=True)
-    summary_ids = model.generate(inputs, max_length=150, min_length=40, length_penalty=2.0, num_beams=4, early_stopping=True)
-    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+# Function to calculate TF-IDF vectors
+def calculate_tfidf_vectors(documents):
+    tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = tfidf_vectorizer.fit_transform(documents)
+    return tfidf_matrix
+
+# Function to read text from PDF
+def read_pdf(file):
+    pdf_reader = PyPDF2.PdfFileReader(file)
+    text = ""
+    for page_num in range(pdf_reader.numPages):
+        page = pdf_reader.getPage(page_num)
+        text += page.extractText()
+    return text
+
+# Function to read text from DOCX
+def read_docx(file):
+    doc = docx.Document(file)
+    text = ""
+    for paragraph in doc.paragraphs:
+        text += paragraph.text
+    return text
+
+# Function to summarize document
+def summarize_document(document, num_sentences=2):
+    # Preprocess the document
+    processed_document = preprocess_text(document)
+    # Calculate TF-IDF vectors
+    tfidf_matrix = calculate_tfidf_vectors([processed_document,])
+    # Calculate cosine similarity between sentences and document
+    cosine_similarities = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix)
+    # Get top N similar sentences
+    sentence_scores = list(cosine_similarities.argsort()[0][-num_sentences:])
+    # Extract and return summary
+    summary = ' '.join([sentences[i] for i in sentence_scores])
     return summary
 
-def extract_text_from_pdf(file):
-    try:
-        text = ""
-        with open(file, 'rb') as f:
-            reader = PyPDF2.PdfFileReader(f)
-            for page_num in range(reader.numPages):
-                text += reader.getPage(page_num).extractText()
-        return text
-    except Exception as e:
-        st.error(f"An error occurred while extracting text from the PDF: {str(e)}")
-        return ""
-
-def extract_text_from_docx(file):
-    try:
-        doc = Document(file)
-        text = ""
-        for para in doc.paragraphs:
-            text += para.text
-        return text
-    except Exception as e:
-        st.error(f"An error occurred while extracting text from the DOCX file: {str(e)}")
-        return ""
-
-# Streamlit app
-st.title('Document Summarization')
-
-# File upload
-uploaded_file = st.file_uploader("Upload a DOCX or PDF file", type=["docx", "pdf"])
-
-text = ""  # Initialize text variable
-
-if uploaded_file is not None:
-    file_type = uploaded_file.type.split('/')[1]
-    if file_type == "docx":
-        text = extract_text_from_docx(uploaded_file)
-    elif file_type == "pdf":
-        text = extract_text_from_pdf(uploaded_file)
-
-    st.write("### Original Text:")
-    st.write(text)
-
-    if st.button('Summarize'):
-        summary = summarize(text)
-        st.write("### Summary:")
+# Define the Streamlit app
+def main():
+    st.title("Document Summarizer")
+    
+    # File upload widget
+    uploaded_file = st.file_uploader("Upload a document", type=["txt", "pdf", "docx"])
+    
+    # Summarize the document when uploaded
+    if uploaded_file is not None:
+        # Read the uploaded file based on file type
+        if uploaded_file.type == "text/plain":  # For text files
+            raw_text = uploaded_file.read().decode("utf-8")
+        elif uploaded_file.type == "application/pdf":  # For PDF files
+            raw_text = read_pdf(uploaded_file)
+        elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":  # For DOCX files
+            raw_text = read_docx(uploaded_file)
+        
+        # Process the document and generate summary
+        summary = summarize_document(raw_text)
+        
+        # Display the summary
+        st.subheader("Summary")
         st.write(summary)
+
+# Entry point of the app
+if __name__ == "__main__":
+    main()
