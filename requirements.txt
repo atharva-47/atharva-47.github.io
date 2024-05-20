@@ -6,3 +6,4 @@ python-docx
 PyPDF2
 pdfplumber
 scikit-learn
+nltk
