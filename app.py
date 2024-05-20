@@ -1,5 +1,7 @@
 import streamlit as st
-from gensim.summarization import summarize
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer
 
 # Define the Streamlit app
 def main():
@@ -11,19 +13,16 @@ def main():
     # Summarize the document when uploaded
     if uploaded_file is not None:
         # Read the uploaded file based on file type
-        if uploaded_file.type == "text/plain":  # For text files
-            raw_text = uploaded_file.read().decode("utf-8")
-        elif uploaded_file.type == "application/pdf":  # For PDF files
-            raw_text = read_pdf(uploaded_file)
-        elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":  # For DOCX files
-            raw_text = read_docx(uploaded_file)
+        raw_text = uploaded_file.read().decode("utf-8")
         
-        # Generate summary using TextRank algorithm
-        summary = summarize(raw_text)
+        # Parse the text and generate summary using LSA algorithm
+        parser = PlaintextParser.from_string(raw_text, Tokenizer("english"))
+        summarizer = LsaSummarizer()
+        summary = summarizer(parser.document, 2)  # Adjust the number of sentences in the summary
         
         # Display the summary
         st.subheader("Summary")
-        st.write(summary)
+        st.write(" ".join(str(sentence) for sentence in summary))
 
 # Entry point of the app
 if __name__ == "__main__":
