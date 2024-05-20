@@ -7,5 +7,5 @@ PyPDF2
 pdfplumber
 scikit-learn
 nltk
-sumy==0.8.1
+sumy==0.7.0
 
