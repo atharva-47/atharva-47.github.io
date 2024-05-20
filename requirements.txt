@@ -2,3 +2,5 @@ streamlit
 transformers
 torch
 sentencepiece
+python-docx 
+PyPDF2
