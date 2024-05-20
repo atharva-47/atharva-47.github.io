@@ -7,4 +7,5 @@ PyPDF2
 pdfplumber
 scikit-learn
 nltk
-gensim==3.8.3
+sumy==0.8.1
+
