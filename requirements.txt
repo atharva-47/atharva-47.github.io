@@ -2,4 +2,4 @@ streamlit
 PyMuPDF
 transformers
 torch
-python-docx==1.1.2
+python-docx2txt
