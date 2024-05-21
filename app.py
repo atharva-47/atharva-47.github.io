@@ -12,7 +12,7 @@ from sumy.utils import get_stop_words
 nltk.download('punkt')
 
 LANGUAGE = "english"
-SENTENCES_COUNT = 5
+SENTENCES_COUNT = 10
 
 def extract_text_from_docx(docx_file):
     doc = docx.Document(docx_file)
