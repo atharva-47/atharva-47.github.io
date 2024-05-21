@@ -1,7 +1,14 @@
 import streamlit as st
 import docx
 import PyPDF2
-from gensim.summarization import summarize
+from sumy.parsers.plaintext import PlaintextParser
+from sumy.nlp.tokenizers import Tokenizer
+from sumy.summarizers.lsa import LsaSummarizer
+from sumy.nlp.stemmers import Stemmer
+from sumy.utils import get_stop_words
+
+LANGUAGE = "english"
+SENTENCES_COUNT = 5
 
 def extract_text_from_docx(docx_file):
     doc = docx.Document(docx_file)
@@ -19,8 +26,13 @@ def extract_text_from_pdf(pdf_file):
             full_text.append(page.extractText())
     return '\n'.join(full_text)
 
-def generate_summary(text, ratio=0.2):
-    return summarize(text, ratio=ratio)
+def generate_summary(text, sentence_count=SENTENCES_COUNT):
+    parser = PlaintextParser.from_string(text, Tokenizer(LANGUAGE))
+    stemmer = Stemmer(LANGUAGE)
+    summarizer = LsaSummarizer(stemmer)
+    summarizer.stop_words = get_stop_words(LANGUAGE)
+    summary = summarizer(parser.document, sentence_count)
+    return ' '.join([str(sentence) for sentence in summary])
 
 def main():
     st.title("Document Summary Generator")
