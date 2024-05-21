@@ -3,4 +3,4 @@ python-docx
 PyPDF2
 gensim==4.3.2
 numpy
-scipy==1.9.0
+scipy==1.10.0
