@@ -1,7 +1,6 @@
 streamlit
 python-docx
 PyPDF2
-#gensim==3.8.3
 numpy
 sumy
 scipy==1.10.0
