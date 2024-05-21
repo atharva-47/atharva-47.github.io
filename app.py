@@ -1,7 +1,7 @@
 import streamlit as st
 import fitz  # PyMuPDF
 from transformers import pipeline
-import docx
+import docx2txt
 
 # Load summarization pipeline
 summarizer = pipeline("summarization")
@@ -32,8 +32,7 @@ if uploaded_file is not None:
         for page in pdf_reader:
             text += page.get_text()
     elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        doc = docx.Document(uploaded_file)
-        text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+        text = docx2txt.process(uploaded_file)
     else:
         text = uploaded_file.read().decode("utf-8")
 
