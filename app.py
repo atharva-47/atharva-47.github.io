@@ -1,48 +1,47 @@
 import streamlit as st
-import fitz  # PyMuPDF
-from transformers import pipeline
-import docx2txt
+import docx
+import PyPDF2
+from gensim.summarization import summarize
 
-# Load summarization pipeline
-summarizer = pipeline("summarization")
+def extract_text_from_docx(docx_file):
+    doc = docx.Document(docx_file)
+    full_text = []
+    for para in doc.paragraphs:
+        full_text.append(para.text)
+    return '\n'.join(full_text)
 
-# Function to summarize text
-def summarize_text(text, max_length=150, min_length=30):
-    # Split text into chunks if it's too long for the model
-    num_iters = len(text) // 1000 + 1
-    summarized_text = ""
-    for i in range(num_iters):
-        start = i * 1000
-        end = (i + 1) * 1000
-        summary = summarizer(text[start:end], max_length=max_length, min_length=min_length, do_sample=False)
-        summarized_text += summary[0]['summary_text'] + " "
-    return summarized_text
+def extract_text_from_pdf(pdf_file):
+    with open(pdf_file, 'rb') as file:
+        reader = PyPDF2.PdfFileReader(file)
+        full_text = []
+        for page_num in range(reader.numPages):
+            page = reader.getPage(page_num)
+            full_text.append(page.extractText())
+    return '\n'.join(full_text)
 
-# Streamlit UI
-st.title("Document Summarizer")
+def generate_summary(text, ratio=0.2):
+    return summarize(text, ratio=ratio)
 
-uploaded_file = st.file_uploader("Choose a file", type=["pdf", "docx", "txt"])
+def main():
+    st.title("Document Summary Generator")
+    st.write("Upload a .docx or .pdf file and get a summary!")
 
-if uploaded_file is not None:
-    # Read the file
-    if uploaded_file.type == "application/pdf":
-        # Extract text from PDF
-        pdf_reader = fitz.open(stream=uploaded_file.read(), filetype="pdf")
-        text = ""
-        for page in pdf_reader:
-            text += page.get_text()
-    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-        text = docx2txt.process(uploaded_file)
-    else:
-        text = uploaded_file.read().decode("utf-8")
+    file = st.file_uploader("Upload file", type=['docx', 'pdf'])
 
-    # Display the original document
-    st.subheader("Original Document")
-    st.write(text)
+    if file is not None:
+        file_extension = file.name.split('.')[-1]
 
-    # Summarize the document
-    summary = summarize_text(text)
+        if file_extension == 'docx':
+            text = extract_text_from_docx(file)
+        elif file_extension == 'pdf':
+            text = extract_text_from_pdf(file)
+        else:
+            st.error("Unsupported file format. Only docx and pdf files are supported.")
+            return
 
-    # Display the summary
-    st.subheader("Summary")
-    st.write(summary)
+        summary = generate_summary(text)
+        st.subheader("Summary:")
+        st.write(summary)
+
+if __name__ == "__main__":
+    main()
