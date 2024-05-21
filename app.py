@@ -1,11 +1,15 @@
 import streamlit as st
 import docx
 import PyPDF2
+import nltk
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
+
+# Download the 'punkt' data
+nltk.download('punkt')
 
 LANGUAGE = "english"
 SENTENCES_COUNT = 5
@@ -18,12 +22,11 @@ def extract_text_from_docx(docx_file):
     return '\n'.join(full_text)
 
 def extract_text_from_pdf(pdf_file):
-    with open(pdf_file, 'rb') as file:
-        reader = PyPDF2.PdfFileReader(file)
-        full_text = []
-        for page_num in range(reader.numPages):
-            page = reader.getPage(page_num)
-            full_text.append(page.extractText())
+    reader = PyPDF2.PdfFileReader(pdf_file)
+    full_text = []
+    for page_num in range(reader.getNumPages()):
+        page = reader.getPage(page_num)
+        full_text.append(page.extractText())
     return '\n'.join(full_text)
 
 def generate_summary(text, sentence_count=SENTENCES_COUNT):
