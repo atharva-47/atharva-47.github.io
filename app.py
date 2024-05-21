@@ -22,7 +22,7 @@ def extract_text_from_docx(docx_file):
     return '\n'.join(full_text)
 
 def extract_text_from_pdf(pdf_file):
-    reader = PyPDF2.PdfFileReader(pdf_file)
+    reader = PyPDF2.PdfReader(pdf_file)
     full_text = []
     for page_num in range(reader.getNumPages()):
         page = reader.getPage(page_num)
