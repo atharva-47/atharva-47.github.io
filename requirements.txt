@@ -2,6 +2,4 @@ streamlit
 PyMuPDF
 transformers
 torch
-docx
-
-
+python-docx>=0.8.11
