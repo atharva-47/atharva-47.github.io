@@ -25,8 +25,8 @@ def extract_text_from_pdf(pdf_file):
     reader = PyPDF2.PdfReader(pdf_file)
     full_text = []
     for page_num in range(len(reader.pages)):
-        page = reader.pages[page_num]  # corrected variable name here
-        full_text.append(page.extractText())
+        page = reader.pages[page_num]
+        full_text.append(page.extract_text())  # Changed from extractText() to extract_text()
     return '\n'.join(full_text)
 
 def generate_summary(text, sentence_count=SENTENCES_COUNT):
