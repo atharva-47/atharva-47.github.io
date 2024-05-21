@@ -25,7 +25,7 @@ def extract_text_from_pdf(pdf_file):
     reader = PyPDF2.PdfReader(pdf_file)
     full_text = []
     for page_num in range(len(reader.pages)):
-        page = reader.pages[page_number]
+        page = reader.pages[page_num]  # corrected variable name here
         full_text.append(page.extractText())
     return '\n'.join(full_text)
 
