@@ -2,6 +2,7 @@ import streamlit as st
 import docx
 import PyPDF2
 import nltk
+import re
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
@@ -30,9 +31,12 @@ def extract_text_from_pdf(pdf_file):
     return '\n'.join(full_text)
 
 def clean_text(text):
-    # Remove unwanted characters or patterns
-    text = text.replace('\n', ' ').replace('\r', '')
-    text = ' '.join(text.split())  # Remove extra spaces
+    # Remove non-ASCII characters
+    text = re.sub(r'[^\x00-\x7F]+', ' ', text)
+    # Remove multiple spaces, tabs, and newlines
+    text = re.sub(r'\s+', ' ', text)
+    # Remove leading and trailing whitespace
+    text = text.strip()
     return text
 
 def generate_summary(text, sentence_count=SENTENCES_COUNT):
