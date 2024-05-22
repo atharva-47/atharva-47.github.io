@@ -6,3 +6,4 @@ sumy
 scipy==1.10.0
 nltk
 pdfplumber
+langdetect
