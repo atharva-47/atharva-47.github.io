@@ -26,8 +26,14 @@ def extract_text_from_pdf(pdf_file):
     full_text = []
     for page_num in range(len(reader.pages)):
         page = reader.pages[page_num]
-        full_text.append(page.extract_text())  # Changed from extractText() to extract_text()
+        full_text.append(page.extract_text())
     return '\n'.join(full_text)
+
+def clean_text(text):
+    # Remove unwanted characters or patterns
+    text = text.replace('\n', ' ').replace('\r', '')
+    text = ' '.join(text.split())  # Remove extra spaces
+    return text
 
 def generate_summary(text, sentence_count=SENTENCES_COUNT):
     parser = PlaintextParser.from_string(text, Tokenizer(LANGUAGE))
@@ -54,7 +60,8 @@ def main():
             st.error("Unsupported file format. Only docx and pdf files are supported.")
             return
 
-        summary = generate_summary(text)
+        clean_text_content = clean_text(text)
+        summary = generate_summary(clean_text_content)
         st.subheader("Summary:")
         st.write(summary)
 
