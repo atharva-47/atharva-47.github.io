@@ -8,6 +8,7 @@ from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lsa import LsaSummarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
+from langdetect import detect
 
 # Download the 'punkt' data
 nltk.download('punkt')
@@ -37,7 +38,18 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text)
     # Remove leading and trailing whitespace
     text = text.strip()
+    # Filter out non-English text
+    text = filter_non_english(text)
     return text
+
+def filter_non_english(text):
+    filtered_text = ""
+    lines = text.split("\n")
+    for line in lines:
+        # Check if the line contains English text
+        if len(line) > 0 and detect(line) == 'en':
+            filtered_text += line + "\n"
+    return filtered_text
 
 def generate_summary(text, sentence_count=SENTENCES_COUNT):
     parser = PlaintextParser.from_string(text, Tokenizer(LANGUAGE))
