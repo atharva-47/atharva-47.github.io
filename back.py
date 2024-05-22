@@ -1,6 +1,6 @@
 import streamlit as st
 import docx
-import pdfplumber
+import PyPDF2
 import nltk
 import re
 from sumy.parsers.plaintext import PlaintextParser
@@ -23,12 +23,11 @@ def extract_text_from_docx(docx_file):
     return '\n'.join(full_text)
 
 def extract_text_from_pdf(pdf_file):
+    reader = PyPDF2.PdfReader(pdf_file)
     full_text = []
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text()
-            if text:
-                full_text.append(text)
+    for page_num in range(len(reader.pages)):
+        page = reader.pages[page_num]
+        full_text.append(page.extract_text())
     return '\n'.join(full_text)
 
 def clean_text(text):
@@ -48,11 +47,16 @@ def generate_summary(text, sentence_count=SENTENCES_COUNT):
     summary = summarizer(parser.document, sentence_count)
     return ' '.join([str(sentence) for sentence in summary])
 
+def summarize_page(page_text):
+    return page_text[:50] + '...'
+
 def main():
     st.title("Document Summary Generator")
     st.write("Upload a .docx or .pdf file and get a summary!")
 
     file = st.file_uploader("Upload file", type=['docx', 'pdf'])
+
+    generate_page_summary = st.checkbox('Generate Page-wise Summary')
 
     if file is not None:
         file_extension = file.name.split('.')[-1]
@@ -70,9 +74,15 @@ def main():
         # Print or log the cleaned text for debugging
         st.text_area("Extracted Text", clean_text_content, height=200)
         
-        summary = generate_summary(clean_text_content)
-        st.subheader("Summary:")
-        st.write(summary)
+        if generate_page_summary:
+            pages = clean_text_content.split('\n')
+            for i, page in enumerate(pages):
+                summary = summarize_page(page)
+                st.write(f'**Page {i+1} Summary:**\n{summary}')
+        else:
+            summary = generate_summary(clean_text_content)
+            st.subheader("Summary:")
+            st.write(summary)
 
 if __name__ == "__main__":
     main()
