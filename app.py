@@ -3,17 +3,9 @@ import docx
 import PyPDF2
 import nltk
 import re
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
-from sumy.nlp.stemmers import Stemmer
-from sumy.utils import get_stop_words
 
 # Download the 'punkt' data
 nltk.download('punkt')
-
-LANGUAGE = "english"
-SENTENCES_COUNT = 10
 
 def extract_text_from_docx(docx_file):
     doc = docx.Document(docx_file)
@@ -39,13 +31,42 @@ def clean_text(text):
     text = text.strip()
     return text
 
-def generate_summary(text, sentence_count=SENTENCES_COUNT):
-    parser = PlaintextParser.from_string(text, Tokenizer(LANGUAGE))
-    stemmer = Stemmer(LANGUAGE)
-    summarizer = LsaSummarizer(stemmer)
-    summarizer.stop_words = get_stop_words(LANGUAGE)
-    summary = summarizer(parser.document, sentence_count)
-    return ' '.join([str(sentence) for sentence in summary])
+def parse_extracted_text(extracted_text):
+    # Split the text into lines
+    lines = extracted_text.split('\n')
+    
+    # Initialize lists to store the structured data
+    structured_data = []
+
+    # Initialize temporary variables to store data for each row
+    temp_row = {}
+
+    # Define a pattern to identify lines that start with a number (indicating a new data row)
+    pattern = re.compile(r'^\d{1,2}\.\s')
+
+    for line in lines:
+        if pattern.match(line):
+            # If the line starts with a number, it indicates the start of a new row
+            if temp_row:
+                # Append the previous row to the structured data list
+                structured_data.append(temp_row)
+                temp_row = {}
+            # Extract the number (if needed) and the rest of the line
+            parts = line.split(maxsplit=1)
+            temp_row['number'] = parts[0]
+            temp_row['text'] = parts[1] if len(parts) > 1 else ''
+        else:
+            # If the line does not start with a number, it is a continuation of the previous row's text
+            if 'text' in temp_row:
+                temp_row['text'] += ' ' + line
+            else:
+                temp_row['text'] = line
+
+    # Append the last row to the structured data list if it exists
+    if temp_row:
+        structured_data.append(temp_row)
+    
+    return structured_data
 
 def main():
     st.title("Document Summary Generator")
@@ -69,9 +90,12 @@ def main():
         # Print or log the cleaned text for debugging
         st.text_area("Extracted Text", clean_text_content, height=200)
         
-        summary = generate_summary(clean_text_content)
-        st.subheader("Summary:")
-        st.write(summary)
+        # Parse the extracted text into structured data
+        structured_data = parse_extracted_text(clean_text_content)
+        
+        st.subheader("Structured Data:")
+        for data in structured_data:
+            st.write(data)
 
 if __name__ == "__main__":
     main()
