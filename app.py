@@ -33,7 +33,7 @@ def extract_text_from_pdf(pdf_file):
 def clean_text(text):
     # Remove non-ASCII characters
     text = re.sub(r'[^\x00-\x7F]+', ' ', text)
-    # Remove multiple spaces, tabs, and newlines
+    # Normalize whitespace: convert multiple spaces, newlines, or tabs to a single space
     text = re.sub(r'\s+', ' ', text)
     # Remove leading and trailing whitespace
     text = text.strip()
@@ -65,6 +65,10 @@ def main():
             return
 
         clean_text_content = clean_text(text)
+        
+        # Print or log the cleaned text for debugging
+        st.text_area("Extracted Text", clean_text_content, height=200)
+        
         summary = generate_summary(clean_text_content)
         st.subheader("Summary:")
         st.write(summary)
