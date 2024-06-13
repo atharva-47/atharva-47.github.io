@@ -5,13 +5,15 @@ from urllib.parse import urljoin
 import time  # For throttling requests (optional)
 
 
-# Hide Streamlit branding and other elements
 hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
             footer {visibility: hidden;}
             header {visibility: hidden;}
             .css-1lsmgbg {display: none;}
+            .stApp { overflow: hidden; }
+            .viewerBadge_container__1QSob {display: none;}
+            .viewerBadge_container__1QSob, .viewerBadge_link__1S137 {display: none;}
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
