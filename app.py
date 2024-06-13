@@ -1,41 +1,56 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
+import streamlit as st
+import requests
 from bs4 import BeautifulSoup
+import time  # For throttling requests (optional)
 
-# Function to count ads using Selenium
-def count_ads_selenium(url):
+def count_ads(url, max_requests=10, delay_between_requests=1):
+  """Counts potential ads on a website using a combination of heuristics.
+
+  Args:
+      url (str): The URL of the website to analyze.
+      max_requests (int, optional): The maximum number of requests to make
+          within a short timeframe to avoid overloading the server. Defaults to 10.
+      delay_between_requests (float, optional): The delay (in seconds) between
+          requests for throttling. Defaults to 1.
+
+  Returns:
+      int: The estimated number of potential ads.
+  """
+
+  potential_ads = 0
+  request_count = 0
+
+  while request_count < max_requests:
     try:
-        # Set up Selenium WebDriver
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')  # Run in headless mode, no GUI
-        service = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=options)
+      response = requests.get(url)
+      response.raise_for_status()  # Raise exception for non-2xx status codes
+      soup = BeautifulSoup(response.content, 'html.parser')
 
-        # Load the webpage
-        driver.get(url)
-        
-        # Wait for dynamic content to load (adjust sleep time as needed)
-        import time
-        time.sleep(5)  # Adjust as needed
+      # Heuristics for potential ad detection (can be further customized):
+      potential_ads += len(soup.find_all('iframe'))
+      potential_ads += len(soup.find_all('img', attrs={'alt': 'Advertisement'}))
+      potential_ads += len(soup.find_all(class_=lambda class_: class_ and 'ad' in class_.lower()))
+      potential_ads += len(soup.find_all(id=lambda id_: id_ and 'ad' in id_.lower()))
 
-        # Get page source after JavaScript has rendered
-        page_source = driver.page_source
-        soup = BeautifulSoup(page_source, 'html.parser')
+      request_count += 1
+      if request_count < max_requests:
+        time.sleep(delay_between_requests)  # Throttling to avoid overloading servers
 
-        # Example: Count div elements with class names commonly used for ads
-        ad_divs = soup.find_all('div', class_='ad-class-name')  # Replace with actual ad class name
+    except requests.exceptions.RequestException as e:
+      print(f"Error: {e}")
+      break  # Stop further requests on error
 
-        # Count the ad divs
-        ad_count = len(ad_divs)
+  return potential_ads
 
-        driver.quit()  # Close the WebDriver
+st.title('Website Ad Counter')
+url = st.text_input('Enter a website URL:')
 
-        return ad_count
-
-    except Exception as e:
-        print(f"Error fetching or parsing the webpage with Selenium: {e}")
-        return None
-
-# Replace count_ads with count_ads_selenium in your Streamlit app
-# Make sure to adjust the error handling and other aspects accordingly
+if st.button('Count Ads'):
+  if url:
+    try:
+      ad_count = count_ads(url)
+      st.write(f"Number of potential ads: {ad_count}")
+    except requests.exceptions.RequestException as e:
+      st.error(f"Error: {e}")
+  else:
+    st.warning('Please enter a URL.')
