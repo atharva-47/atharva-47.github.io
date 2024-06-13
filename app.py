@@ -1,77 +1,53 @@
 import streamlit as st
-import docx
-import PyPDF2
-import nltk
-import re
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.summarizers.lsa import LsaSummarizer
-from sumy.nlp.stemmers import Stemmer
-from sumy.utils import get_stop_words
+from docx import Document
+import fitz  # PyMuPDF
+import os
 
-# Download the 'punkt' data
-nltk.download('punkt')
+def summarize_text(text):
+    # Implement a simple summarizer
+    return ' '.join(text.split()[:50])  # Example: First 50 words
 
-LANGUAGE = "english"
-SENTENCES_COUNT = 10
+def suggest_improvements(text):
+    # Implement a simple suggestion engine
+    return ["Consider simplifying complex sentences.", "Check for passive voice usage."]
 
-def extract_text_from_docx(docx_file):
-    doc = docx.Document(docx_file)
+def process_docx(file):
+    doc = Document(file)
     full_text = []
     for para in doc.paragraphs:
         full_text.append(para.text)
     return '\n'.join(full_text)
 
-def extract_text_from_pdf(pdf_file):
-    reader = PyPDF2.PdfReader(pdf_file)
+def process_pdf(file):
+    doc = fitz.open(file)
     full_text = []
-    for page_num in range(len(reader.pages)):
-        page = reader.pages[page_num]
-        full_text.append(page.extract_text())
+    for page in doc:
+        full_text.append(page.get_text())
     return '\n'.join(full_text)
 
-def clean_text(text):
-    # Remove non-ASCII characters
-    text = re.sub(r'[^\x00-\x7F]+', ' ', text)
-    # Normalize whitespace: convert multiple spaces, newlines, or tabs to a single space
-    text = re.sub(r'\s+', ' ', text)
-    # Remove leading and trailing whitespace
-    text = text.strip()
-    return text
+def process_txt(file):
+    return file.read().decode('utf-8')
 
-def generate_summary(text, sentence_count=SENTENCES_COUNT):
-    parser = PlaintextParser.from_string(text, Tokenizer(LANGUAGE))
-    stemmer = Stemmer(LANGUAGE)
-    summarizer = LsaSummarizer(stemmer)
-    summarizer.stop_words = get_stop_words(LANGUAGE)
-    summary = summarizer(parser.document, sentence_count)
-    return ' '.join([str(sentence) for sentence in summary])
+st.title("Document Summarizer and Suggestion App")
 
-def main():
-    st.title("Document Summary Generator")
-    st.write("Upload a .docx or .pdf file and get a summary!")
+uploaded_file = st.file_uploader("Choose a file", type=["pdf", "docx", "txt"])
 
-    file = st.file_uploader("Upload file", type=['docx', 'pdf'])
+if uploaded_file:
+    if uploaded_file.name.endswith(".docx"):
+        text = process_docx(uploaded_file)
+    elif uploaded_file.name.endswith(".pdf"):
+        text = process_pdf(uploaded_file)
+    elif uploaded_file.name.endswith(".txt"):
+        text = process_txt(uploaded_file)
 
-    if file is not None:
-        file_extension = file.name.split('.')[-1]
+    st.subheader("Original Text")
+    st.write(text)
 
-        if file_extension == 'docx':
-            text = extract_text_from_docx(file)
-        elif file_extension == 'pdf':
-            text = extract_text_from_pdf(file)
-        else:
-            st.error("Unsupported file format. Only docx and pdf files are supported.")
-            return
+    summary = summarize_text(text)
+    st.subheader("Summary")
+    st.write(summary)
 
-        clean_text_content = clean_text(text)
-        
-        # Print or log the cleaned text for debugging
-        st.text_area("Extracted Text", clean_text_content, height=200)
-        
-        summary = generate_summary(clean_text_content)
-        st.subheader("Summary:")
-        st.write(summary)
-
-if __name__ == "__main__":
-    main()
+    suggestions = suggest_improvements(text)
+    st.subheader("Suggestions")
+    for suggestion in suggestions:
+        st.write("- " + suggestion)
