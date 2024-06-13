@@ -1,5 +1,5 @@
 streamlit
 python-docx
-PyMuPDF
+PyMuPDF==1.19.6
 nltk
 transformers
