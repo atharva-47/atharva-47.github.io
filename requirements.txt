@@ -1,5 +1,5 @@
-streamlit==1.14.0
-python-docx==0.8.11
-PyMuPDF==1.19.6
-nltk==3.7
-transformers==4.24.0
+streamlit
+python-docx
+PyMuPDF
+nltk
+transformers
