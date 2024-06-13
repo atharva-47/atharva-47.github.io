@@ -15,7 +15,7 @@ hide_streamlit_style = """
             .viewerBadge_container__1QSob {display: none;}
             .viewerBadge_link__1S137 {display: none;}
             .stApp { overflow: hidden; }
-            .css-m70y {display:none}
+            .css-15zrgzn {display: none}
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
