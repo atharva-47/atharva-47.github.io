@@ -4,15 +4,16 @@ from bs4 import BeautifulSoup
 import time  # For throttling requests (optional)
 from urllib.parse import urljoin  # For handling relative URLs
 
+
 def count_ads(url, max_requests=10, delay_between_requests=1):
     """Counts potential ads on a website using a combination of heuristics.
 
     Args:
         url (str): The URL of the website to analyze.
         max_requests (int, optional): The maximum number of requests to make
-            within a short timeframe to avoid overloading the server. Defaults to 10.
+                                     within a short timeframe to avoid overloading the server. Defaults to 10.
         delay_between_requests (float, optional): The delay (in seconds) between
-            requests for throttling. Defaults to 1.
+                                                 requests for throttling. Defaults to 1.
 
     Returns:
         int: The estimated number of potential ads.
@@ -40,16 +41,8 @@ def count_ads(url, max_requests=10, delay_between_requests=1):
     potential_ads += len(soup.find_all(class_=lambda class_: class_ and 'ad' in class_.lower()))
     potential_ads += len(soup.find_all(id=lambda id_: id_ and 'ad' in id_.lower()))
 
-    # Explore deeper links (now removed)
-    # explore_deeper_links = st.checkbox('Explore deeper links (may slow down analysis for complex websites)')
-    # if explore_deeper_links:
-    #     for link in soup.find_all('a', href=True):
-    #         if request_count < max_requests:
-    #             sub_url = urljoin(url, link['href'])  # Handle relative URLs
-    #             request_count += 1
-    #             potential_ads += count_ads(sub_url, max_requests - request_count, delay_between_requests)
-
     return potential_ads
+
 
 def estimate_time_wasted(ad_count, average_ad_duration=5):  # Assuming an average ad duration of 5 seconds
     """Estimates the time potentially wasted on ads based on estimated ad count and average ad duration.
@@ -71,30 +64,43 @@ def estimate_time_wasted(ad_count, average_ad_duration=5):  # Assuming an averag
         time_wasted_str += f"{hours} hour{'s' if hours > 1 else ''}"
     if minutes > 0:
         time_wasted_str += (f" {minutes} minute{'s' if minutes > 1 else ''}"
-                             if time_wasted_str else f"{minutes} minutes")
+                           if time_wasted_str else f"{minutes} minutes")
     if seconds > 0:
         time_wasted_str += (f" {seconds:.2f} seconds"
-                             if time_wasted_str else f"{seconds} seconds")
+                           if time_wasted_str else f"{seconds} seconds")
 
     return time_wasted_str
-
 # Continued from Part 1
 
 st.title('Website Ad Counter and Time Waster Estimator')
 url = st.text_input('Enter a website URL:')
 
-if st.button('Count Ads and Estimate Time Wasted'):
-  if url:
-    try:
-      ad_count = count_ads(url)
-      estimated_time_wasted = estimate_time_wasted(ad_count)
+average_cpm = st.number_input('Estimated Cost-Per-Thousand Impressions (Optional):', min_value=0.0)
 
-      st.write(f"Number of potential ads: {ad_count}")
-      st.write(f"Estimated time potentially wasted: {estimated_time_wasted}")
-    
-    except requests.exceptions.RequestException as e:
+if st.button('Count Ads and Estimate Time Wasted'):
+    if url:
+        try:
+            ad_count = count_ads(url)
+            estimated_time_wasted = estimate_time_wasted(ad_count)
+
+            st.write(f"Number of potential ads: {ad_count}")
+            st.write(f"Estimated time potentially wasted: {estimated_time_wasted}")
+
+            # Disclaimer about ad revenue estimation
+            st.info("**Disclaimer:** Estimating a website's ad revenue is not possible from the user's side. Ad revenue depends on various factors like user location, demographics, and browsing history. This application can only estimate the time potentially wasted on ads based on the number of potential ads and an assumed average ad duration.")
+
+            # Potential ad revenue estimation (informative, not accurate)
+            if average_cpm > 0:
+                estimated_impressions = ad_count * 1000  # Assuming 1000 impressions per page view
+                estimated_revenue = estimated_impressions * average_cpm / 1000000  # Convert to millions
+
+                st.write("**Informative Estimation (not accurate):**")
+                st.write(f"Estimated ad impressions (assuming 1000 per page view): {estimated_impressions:,}")
+                st.write(f"Estimated potential ad revenue based on your CPM input: ${estimated_revenue:.2f} (highly dependent on actual ad rates)")
+
+        except requests.exceptions.RequestException as e:
             st.error(f"Error: {e}")
             st.write("An error occurred while fetching the website. Please try again.")
-    except ValueError as e:
+        except ValueError as e:
             st.error(f"Invalid URL: {e}")
             st.write("Please enter a valid website address.")
