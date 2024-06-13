@@ -79,6 +79,8 @@ def estimate_time_wasted(ad_count, average_ad_duration=5):  # Assuming an averag
 
     return time_wasted_str
 
+# Continued from Part 1
+
 st.title('Website Ad Counter and Time Waster Estimator')
 url = st.text_input('Enter a website URL:')
 
@@ -90,4 +92,11 @@ if st.button('Count Ads and Estimate Time Wasted'):
 
             st.write(f"Number of potential ads: {ad_count}")
             st.write(f"Estimated time potentially wasted: {estimated_time_wasted}")
-        except
+        except requests.exceptions.RequestException as e:
+            st.error(f"Error: {e}")
+            st.write("An error occurred while fetching the website. Please try again.")
+        except ValueError as e:
+            st.error(f"Invalid URL: {e}")
+            st.write("Please enter a valid website address.")
+
+# Closing curly brace for the button click block
