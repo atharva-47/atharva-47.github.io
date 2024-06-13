@@ -5,6 +5,17 @@ from urllib.parse import urljoin
 import time  # For throttling requests (optional)
 
 
+# Hide Streamlit branding and other elements
+hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            .css-1lsmgbg {display: none;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 def count_ads(url, max_requests=10, delay_between_requests=1):
     """Counts potential ads on a website using a combination of heuristics."""
     potential_ads = 0
