@@ -80,31 +80,15 @@ def estimate_time_wasted(ad_count, average_ad_duration=5):  # Assuming an averag
 
 # Continued from Part 1
 
+# Continued from Part 1
+
 st.title('Website Ad Counter and Time Waster Estimator')
 url = st.text_input('Enter a website URL:')
-
-explore_deeper_links = st.checkbox('Explore deeper links (may slow down analysis for complex websites)', key='explore_deeper_links')  # Added unique key
 
 if st.button('Count Ads and Estimate Time Wasted'):
   if url:
     try:
-      ad_count = 0  # Initialize ad_count outside the if statement
-
-      if explore_deeper_links:
-        ad_count = count_ads(url)
-      else:
-        # Analyze only the main page if deeper links not selected
-        response = requests.get(url)
-        response.raise_for_status()  # Raise exception for non-2xx status codes
-
-        soup = BeautifulSoup(response.content, 'html.parser')
-
-        # Heuristics for potential ad detection on the main page:
-        ad_count += len(soup.find_all('iframe'))
-        ad_count += len(soup.find_all('img', attrs={'alt': 'Advertisement'}))
-        ad_count += len(soup.find_all(class_=lambda class_: class_ and 'ad' in class_.lower()))
-        ad_count += len(soup.find_all(id=lambda id_: id_ and 'ad' in id_.lower()))
-
+      ad_count = count_ads(url)
       estimated_time_wasted = estimate_time_wasted(ad_count)
 
       st.write(f"Number of potential ads: {ad_count}")
