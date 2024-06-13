@@ -1,5 +1,3 @@
 streamlit
-python-docx
-PyMuPDF==1.19.6
-nltk
-transformers
+requests
+beautifulsoup4
