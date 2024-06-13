@@ -46,7 +46,7 @@ def estimate_time_wasted(ad_count, average_ad_duration=5):
     return time_wasted_str
 
 
-st.title('Website Ad Counter and Time Waster Estimator')
+st.title('Website Ad Counter and Time Waste Estimator')
 url = st.text_input('Enter a website URL:')
 average_cpm = st.number_input('Estimated Cost-Per-Thousand Impressions (Optional):', min_value=0.0)
 
