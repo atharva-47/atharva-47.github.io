@@ -40,14 +40,14 @@ def count_ads(url, max_requests=10, delay_between_requests=1):
     potential_ads += len(soup.find_all(class_=lambda class_: class_ and 'ad' in class_.lower()))
     potential_ads += len(soup.find_all(id=lambda id_: id_ and 'ad' in id_.lower()))
 
-    # Explore deeper links (optional, slower for large websites):
-    explore_deeper_links = st.checkbox('Explore deeper links (may slow down analysis for complex websites)')
-    if explore_deeper_links:
-        for link in soup.find_all('a', href=True):
-            if request_count < max_requests:
-                sub_url = urljoin(url, link['href'])  # Handle relative URLs
-                request_count += 1
-                potential_ads += count_ads(sub_url, max_requests - request_count, delay_between_requests)
+    # Explore deeper links (now removed)
+    # explore_deeper_links = st.checkbox('Explore deeper links (may slow down analysis for complex websites)')
+    # if explore_deeper_links:
+    #     for link in soup.find_all('a', href=True):
+    #         if request_count < max_requests:
+    #             sub_url = urljoin(url, link['href'])  # Handle relative URLs
+    #             request_count += 1
+    #             potential_ads += count_ads(sub_url, max_requests - request_count, delay_between_requests)
 
     return potential_ads
 
@@ -80,8 +80,6 @@ def estimate_time_wasted(ad_count, average_ad_duration=5):  # Assuming an averag
 
 # Continued from Part 1
 
-# Continued from Part 1
-
 st.title('Website Ad Counter and Time Waster Estimator')
 url = st.text_input('Enter a website URL:')
 
@@ -93,9 +91,10 @@ if st.button('Count Ads and Estimate Time Wasted'):
 
       st.write(f"Number of potential ads: {ad_count}")
       st.write(f"Estimated time potentially wasted: {estimated_time_wasted}")
+    
     except requests.exceptions.RequestException as e:
-      st.error(f"Error: {e}")
-      st.write("An error occurred while fetching the website. Please try again.")
+            st.error(f"Error: {e}")
+            st.write("An error occurred while fetching the website. Please try again.")
     except ValueError as e:
-      st.error(f"Invalid URL: {e}")
-      st.write("Please enter a valid website address.")
+            st.error(f"Invalid URL: {e}")
+            st.write("Please enter a valid website address.")
