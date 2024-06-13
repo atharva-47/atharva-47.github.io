@@ -83,7 +83,7 @@ def estimate_time_wasted(ad_count, average_ad_duration=5):  # Assuming an averag
 st.title('Website Ad Counter and Time Waster Estimator')
 url = st.text_input('Enter a website URL:')
 
-explore_deeper_links = st.checkbox('Explore deeper links (may slow down analysis for complex websites)')
+explore_deeper_links = st.checkbox('Explore deeper links (may slow down analysis for complex websites)', key='explore_deeper_links')  # Added unique key
 
 if st.button('Count Ads and Estimate Time Wasted'):
   if url:
