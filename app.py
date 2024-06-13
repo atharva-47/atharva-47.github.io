@@ -1,69 +1,55 @@
 import streamlit as st
-from docx import Document
-import fitz  # PyMuPDF
-import io
-from gingerit.gingerit import GingerIt
+import os
+import docx
+import PyMuPDF
+import nltk
+from transformers import pipeline
 
-# Replace with your actual Hugging Face API key
-HUGGING_FACE_API_KEY = "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"
+# Download the necessary NLTK resources
+nltk.download('punkt')
 
-def summarize_text(text):
-    api_url = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-    headers = {"Authorization": f"Bearer {HUGGING_FACE_API_KEY}"}
-    payload = {"inputs": text}
-    response = requests.post(api_url, headers=headers, json=payload)
-    summary = response.json()[0]['summary_text']
-    return summary
+# Set the page configuration
+st.set_page_config(page_title="Document Summarizer", page_icon=":books:")
 
-def suggest_improvements(text):
-    parser = GingerIt()
-    result = parser.parse(text)
-    corrections = result['corrections']
-    suggestions = []
-    for correction in corrections:
-        message = f"{correction['text']} -> {correction['correct']}"
-        suggestions.append(message)
-    return suggestions
+# Create the Streamlit app
+st.title("Document Summarizer")
 
-def process_docx(file):
-    doc = Document(file)
-    full_text = []
-    for para in doc.paragraphs:
-        full_text.append(para.text)
-    return '\n'.join(full_text)
+# File upload section
+st.subheader("Upload a Document")
+uploaded_file = st.file_uploader("Choose a file", type=["docx", "pdf", "txt"])
 
-def process_pdf(file):
-    doc = fitz.open(stream=file.read(), filetype="pdf")
-    full_text = []
-    for page in doc:
-        full_text.append(page.get_text())
-    return '\n'.join(full_text)
+if uploaded_file is not None:
+    # Save the uploaded file to disk
+    file_path = os.path.join("uploads", uploaded_file.name)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.getbuffer())
 
-def process_txt(file):
-    return file.read().decode('utf-8')
-
-st.title("Document Summarizer and Suggestion App")
-
-uploaded_file = st.file_uploader("Choose a file", type=["pdf", "docx", "txt"])
-
-if uploaded_file:
+    # Process the document based on the file type
     if uploaded_file.name.endswith(".docx"):
-        text = process_docx(uploaded_file)
+        doc = docx.Document(file_path)
+        text = "\n".join([paragraph.text for paragraph in doc.paragraphs])
     elif uploaded_file.name.endswith(".pdf"):
-        text = process_pdf(uploaded_file)
+        doc = PyMuPDF.Document(file_path)
+        text = "\n".join([page.get_text() for page in doc])
     elif uploaded_file.name.endswith(".txt"):
-        text = process_txt(uploaded_file)
+        with open(file_path, "r") as f:
+            text = f.read()
 
-    st.subheader("Original Text")
-    st.write(text)
+    # Summarize the text using the Hugging Face Transformers library
+    summarizer = pipeline("summarization")
+    summary = summarizer(text, max_length=200, min_length=50, do_sample=False)[0]["summary_text"]
 
-    if st.button("Summarize"):
-        summary = summarize_text(text)
-        st.subheader("Summary")
-        st.write(summary)
+    # Provide suggestions based on the document type
+    st.subheader("Document Summary")
+    st.write(summary)
 
-    if st.button("Suggest Improvements"):
-        suggestions = suggest_improvements(text)
-        st.subheader("Suggestions")
-        for suggestion in suggestions:
-            st.write("- " + suggestion)
+    st.subheader("Suggestions")
+    if uploaded_file.name.endswith(".docx"):
+        st.write("- Consider using more concise language and shorter sentences.")
+        st.write("- Ensure that the document is well-structured with clear headings and subheadings.")
+    elif uploaded_file.name.endswith(".pdf"):
+        st.write("- Check for any inconsistencies in formatting and layout.")
+        st.write("- Ensure that the document is easy to navigate and understand.")
+    elif uploaded_file.name.endswith(".txt"):
+        st.write("- Consider adding formatting and structure to improve readability.")
+        st.write("- Ensure that the document is free of spelling and grammatical errors.")
