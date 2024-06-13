@@ -6,9 +6,6 @@ from bs4 import BeautifulSoup
 st.markdown(
     """
     <style>
-    .full-width {
-        width: 100%;
-    }
     .btn-primary {
         background-color: #FF8A00;
         color: white;
@@ -73,7 +70,7 @@ url = st.text_input('Enter a website URL:')
 average_cpm = st.number_input('Estimated Cost-Per-Thousand Impressions (Optional):', min_value=0.0)
 
 # Button to trigger ad counting and time estimation
-if st.button('Count Ads and Estimate Time Wasted', class_='btn-primary'):
+if st.button('Count Ads and Estimate Time Wasted'):
     if url:
         try:
             ad_count = count_ads(url)
