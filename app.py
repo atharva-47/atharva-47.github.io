@@ -40,15 +40,14 @@ def count_ads(url, max_requests=10, delay_between_requests=1):
     potential_ads += len(soup.find_all(class_=lambda class_: class_ and 'ad' in class_.lower()))
     potential_ads += len(soup.find_all(id=lambda id_: id_ and 'ad' in id_.lower()))
 
-    # Explore deeper links (optional):
-    if st.checkbox('Explore deeper links'):
+    # Explore deeper links (optional, slower for large websites):
+    explore_deeper_links = st.checkbox('Explore deeper links (may slow down analysis for complex websites)')
+    if explore_deeper_links:
         for link in soup.find_all('a', href=True):
             if request_count < max_requests:
                 sub_url = urljoin(url, link['href'])  # Handle relative URLs
                 request_count += 1
-                potential_ads += count_ads(sub_url, max_requests - request_count)
-                if request_count < max_requests:
-                    time.sleep(delay_between_requests)  # Throttling
+                potential_ads += count_ads(sub_url, max_requests - request_count, delay_between_requests)
 
     return potential_ads
 
@@ -98,5 +97,3 @@ if st.button('Count Ads and Estimate Time Wasted'):
         except ValueError as e:
             st.error(f"Invalid URL: {e}")
             st.write("Please enter a valid website address.")
-
-# Closing curly brace for the button click block
