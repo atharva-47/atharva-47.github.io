@@ -1,10 +1,4 @@
 streamlit
 python-docx
-PyPDF2
-numpy
-sumy
-scipy==1.10.0
-nltk
-pdfplumber
-langdetect==1.0.9
+PyMuPDF
 
